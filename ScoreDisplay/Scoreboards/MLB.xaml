@@ -7,7 +7,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MLB">
-
     <Grid Background="White">
         <Image x:Name="HomeTeam" HorizontalAlignment="Left" Height="150" Margin="41,112,0,0" VerticalAlignment="Top" Width="150"/>
         <Image x:Name="AwayTeam" HorizontalAlignment="Left" Height="150" Margin="41,281,0,0" VerticalAlignment="Top" Width="150"/>
