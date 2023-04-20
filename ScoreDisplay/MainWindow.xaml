@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScoreDisplay"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow"
         WindowState="Maximized">
     <Grid>
-        <TextBox HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="120"/>
-
+        <Border  HorizontalAlignment="Left" VerticalAlignment="Top"  BorderBrush="Black" BorderThickness="2">
+            <Grid Height="166" HorizontalAlignment="Left" Margin="12,12,0,0" Name="grid1" VerticalAlignment="Top" Width="479" Background="#FFF2F2F2" />
+        </Border>
     </Grid>
 </Window>

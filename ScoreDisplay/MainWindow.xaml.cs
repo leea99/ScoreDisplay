@@ -38,6 +38,8 @@ namespace ScoreDisplay
         public MainWindow()
         {
             InitializeComponent();
+            //MLB mlbPage = new MLB();
+            //this.Content = mlbPage;
             GetSportsData();
             //_timer = new System.Threading.Timer(OnCallBack, null, 0, 50000);
         }
@@ -71,6 +73,10 @@ namespace ScoreDisplay
             MLB mlbPage = new MLB();
             vm.HomeLogo = game.competitions[0].competitors[0].team.logo;
             vm.AwayLogo = game.competitions[0].competitors[1].team.logo;
+            vm.HomeName = game.competitions[0].competitors[0].team.name;
+            vm.HomeRecord = game.competitions[0].competitors[0].records[0].summary;
+            vm.AwayName = game.competitions[0].competitors[1].team.name;
+            vm.AwayRecord = game.competitions[0].competitors[1].records[0].summary;
             vm.HomeScore = Int32.Parse(game.competitions[0].competitors[0].score);
             vm.AwayScore = Int32.Parse(game.competitions[0].competitors[1].score);
             vm.HomeHits = game.competitions[0].competitors[0].hits;
@@ -79,6 +85,11 @@ namespace ScoreDisplay
             vm.AwayErrors = game.competitions[0].competitors[1].errors;
             mlbPage.HomeTeam.Source = new BitmapImage(new Uri(vm.HomeLogo));
             mlbPage.AwayTeam.Source = new BitmapImage(new Uri(vm.AwayLogo));
+            var bc = new BrushConverter();
+            mlbPage.HomeTeamName.Text = vm.HomeName;
+            mlbPage.AwayTeamName.Text = vm.AwayName;
+            mlbPage.HomeTeamRecord.Text = vm.HomeRecord;
+            mlbPage.AwayTeamRecord.Text = vm.AwayRecord;
             mlbPage.HomeScore.Text = vm.HomeScore.ToString();
             mlbPage.AwayScore.Text = vm.AwayScore.ToString();
             mlbPage.HomeHits.Text = vm.HomeHits.ToString();

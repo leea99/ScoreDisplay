@@ -10,6 +10,10 @@ namespace ScoreDisplay.ViewModels
     {
         public string HomeLogo { get; set; }
         public string AwayLogo { get; set; }
+        public string HomeName { get; set; }
+        public string AwayName { get; set; }
+        public string HomeRecord { get; set; }
+        public string AwayRecord { get; set; }
         public int HomeScore { get; set; }
         public int AwayScore { get; set; }
         public int HomeHits { get; set; }
