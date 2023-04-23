@@ -8,6 +8,8 @@ namespace ScoreDisplay.ViewModels
 {
     public class BaseballVM
     {
+        public string  HomeAbr { get; set; }
+        public string AwayAbr { get; set; }
         public string HomeLogo { get; set; }
         public string AwayLogo { get; set; }
         public string HomeName { get; set; }
@@ -23,5 +25,7 @@ namespace ScoreDisplay.ViewModels
         public string Inning { get; set; }
         public string Moneyline { get; set; }
         public string OverUnder { get; set; }
+        public string HomeStarter { get; set; }
+        public string AwayStarter { get; set; }
     }
 }

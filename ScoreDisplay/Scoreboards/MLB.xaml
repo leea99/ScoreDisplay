@@ -114,16 +114,16 @@
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Viewbox VerticalAlignment="Top"  Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info1" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                            <TextBox x:Name="Info1" BorderThickness="0" Text="" FontSize="72"></TextBox>
                         </Viewbox>
                         <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info2" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                            <TextBox x:Name="Info2" BorderThickness="0" Text="" FontSize="72"></TextBox>
                         </Viewbox>
-                        <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info3" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                        <Viewbox VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                            <TextBox x:Name="Info3" BorderThickness="0" Text="" FontSize="72"></TextBox>
                         </Viewbox>
-                        <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info4" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                        <Viewbox VerticalAlignment="Top" Grid.Row="3" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                            <TextBox x:Name="Info4" BorderThickness="0" Text="" FontSize="72"></TextBox>
                         </Viewbox>
                     </Grid>
                 </StackPanel>

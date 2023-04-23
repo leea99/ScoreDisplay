@@ -52,18 +52,21 @@ namespace ScoreDisplay
 
         private async void GetMLBData()
         {
-            var client = new WebClient();
-            var content = client.DownloadString("http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard");
-            MLBData baseballData = JsonConvert.DeserializeObject<MLBData>(content);
-            List<MLB> graphics = new List<MLB>();
-            foreach (var game in baseballData.events)
+            using (var client = new HttpClient())
             {
-                graphics.Add(await GetMLBGameScore(game));
-            }
-            foreach (var g in graphics)
-            {
-                this.Content = g;
-                await Task.Delay(5000);
+                var response = await client.GetAsync("http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard");
+                var content = await response.Content.ReadAsStringAsync();
+                MLBData baseballData = JsonConvert.DeserializeObject<MLBData>(content);
+                List<MLB> graphics = new List<MLB>();
+                foreach (var game in baseballData.events)
+                {
+                    graphics.Add(await GetMLBGameScore(game));
+                }
+                foreach (var g in graphics)
+                {
+                    this.Content = g;
+                    await Task.Delay(5000);
+                }
             }
         }
 
@@ -71,6 +74,8 @@ namespace ScoreDisplay
         {
             var vm = new BaseballVM();
             MLB mlbPage = new MLB();
+            vm.HomeAbr = game.competitions[0].competitors[0].team.abbreviation;
+            vm.AwayAbr = game.competitions[0].competitors[1].team.abbreviation;
             vm.HomeLogo = game.competitions[0].competitors[0].team.logo;
             vm.AwayLogo = game.competitions[0].competitors[1].team.logo;
             vm.HomeName = game.competitions[0].competitors[0].team.name;
@@ -87,7 +92,8 @@ namespace ScoreDisplay
             {
                 using (var client = new HttpClient())
                 {
-                    var response = await client.GetAsync("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=401471340");
+                    var gameId = game.id;
+                    var response = await client.GetAsync("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=" + gameId);
                     var content = await response.Content.ReadAsStringAsync();
                     var jsonString = await response.Content.ReadAsStringAsync();
 
@@ -105,11 +111,19 @@ namespace ScoreDisplay
             {
                 DateTime startDate = new DateTime();
                 DateTime.TryParse(game.competitions[0].startDate, out startDate);
+                vm.HomeStarter = game.competitions[0].competitors[0].probables.First().athlete.displayName;
+                vm.AwayStarter = game.competitions[0].competitors[1].probables.First().athlete.displayName;
                 vm.Moneyline = game.competitions[0].odds[0].details;
                 vm.OverUnder = game.competitions[0].odds[0].overUnder.ToString();
                 mlbPage.GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
+                mlbPage.Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter;
+                mlbPage.Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter;
                 mlbPage.Info3.Text = vm.Moneyline;
                 mlbPage.Info4.Text = "O/U: " + vm.OverUnder;
+            }
+            else if (game.competitions[0].status.type.state == "post")
+            {
+                mlbPage.GameStatus.Text = "Final";
             }
             mlbPage.HomeTeam.Source = new BitmapImage(new Uri(vm.HomeLogo));
             mlbPage.AwayTeam.Source = new BitmapImage(new Uri(vm.AwayLogo));
