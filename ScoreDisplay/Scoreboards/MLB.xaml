@@ -30,6 +30,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0">
                     <TextBlock Text="MLB Scores"></TextBlock>
@@ -101,6 +102,46 @@
                 <Border BorderBrush="Black" Grid.Row="3" Grid.Column="3" BorderThickness="3" Margin="-1,0,0,0">
                     <TextBlock x:Name="AwayErrors" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
                 </Border>
+                <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Viewbox VerticalAlignment="Top"  Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                            <TextBox x:Name="Info1" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                        </Viewbox>
+                        <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                            <TextBox x:Name="Info2" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                        </Viewbox>
+                        <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                            <TextBox x:Name="Info3" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                        </Viewbox>
+                        <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                            <TextBox x:Name="Info4" BorderThickness="0" Text="Test" FontSize="72"></TextBox>
+                        </Viewbox>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Grid.Column="3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image x:Name="OnBase" Grid.Row="0"></Image>
+                        <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
+                            <TextBox x:Name="GameStatus" BorderThickness="0" Grid.Row="1" Text="Test" FontSize="72"></TextBox>
+                        </Viewbox>
+                    </Grid>
+                </StackPanel>
             </Grid>
         </StackPanel>
     </Grid>

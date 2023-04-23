@@ -493,4 +493,48 @@ namespace ScoreDisplay.Models
         public bool isExternal { get; set; }
         public bool isPremium { get; set; }
     }
+
+    public class Rootobject
+    {
+        public Situation situation { get; set; }
+    }
+
+    public class Situation
+    {
+        public Lastplay lastPlay { get; set; }
+        public int balls { get; set; }
+        public int strikes { get; set; }
+        public int outs { get; set; }
+        public Onfirst onFirst { get; set; }
+        public Pitcher pitcher { get; set; }
+        public Batter batter { get; set; }
+        public Situationnote[] situationNotes { get; set; }
+    }
+
+    public class Lastplay
+    {
+        public string id { get; set; }
+    }
+
+    public class Onfirst
+    {
+        public int playerId { get; set; }
+    }
+
+    public class Pitcher
+    {
+        public int playerId { get; set; }
+    }
+
+    public class Batter
+    {
+        public int playerId { get; set; }
+    }
+
+    public class Situationnote
+    {
+        public string type { get; set; }
+        public string text { get; set; }
+    }
+
 }

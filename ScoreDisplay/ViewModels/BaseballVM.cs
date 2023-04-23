@@ -21,5 +21,7 @@ namespace ScoreDisplay.ViewModels
         public int HomeErrors { get; set; }
         public int AwayErrors { get; set; }
         public string Inning { get; set; }
+        public string Moneyline { get; set; }
+        public string OverUnder { get; set; }
     }
 }

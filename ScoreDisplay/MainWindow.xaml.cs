@@ -24,6 +24,7 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using System.Timers;
 using System.Reflection.Metadata;
+using System.Net.Http;
 
 namespace ScoreDisplay
 {
@@ -53,7 +54,6 @@ namespace ScoreDisplay
         {
             var client = new WebClient();
             var content = client.DownloadString("http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard");
-            dynamic data = JsonConvert.DeserializeObject<dynamic>(content);
             MLBData baseballData = JsonConvert.DeserializeObject<MLBData>(content);
             List<MLB> graphics = new List<MLB>();
             foreach (var game in baseballData.events)
@@ -83,6 +83,34 @@ namespace ScoreDisplay
             vm.AwayHits = game.competitions[0].competitors[1].hits;
             vm.HomeErrors = game.competitions[0].competitors[0].errors;
             vm.AwayErrors = game.competitions[0].competitors[1].errors;
+            if (game.competitions[0].status.type.state == "in")
+            {
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=401471340");
+                    var content = await response.Content.ReadAsStringAsync();
+                    var jsonString = await response.Content.ReadAsStringAsync();
+
+                    // deserialize the JSON string into a dynamic object
+                    dynamic jsonObject = JsonConvert.DeserializeObject(jsonString);
+
+                    // get the "Situation" object from the dynamic object
+                    var test = jsonObject.situation;
+                    Situation situationObject = JsonConvert.DeserializeObject<Situation>(jsonObject.situation.ToString());
+                }
+                vm.Inning = game.competitions[0].status.type.detail;
+                mlbPage.GameStatus.Text = "Inning: " + vm.Inning;
+            }
+            else if (game.competitions[0].status.type.state == "pre")
+            {
+                DateTime startDate = new DateTime();
+                DateTime.TryParse(game.competitions[0].startDate, out startDate);
+                vm.Moneyline = game.competitions[0].odds[0].details;
+                vm.OverUnder = game.competitions[0].odds[0].overUnder.ToString();
+                mlbPage.GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
+                mlbPage.Info3.Text = vm.Moneyline;
+                mlbPage.Info4.Text = "O/U: " + vm.OverUnder;
+            }
             mlbPage.HomeTeam.Source = new BitmapImage(new Uri(vm.HomeLogo));
             mlbPage.AwayTeam.Source = new BitmapImage(new Uri(vm.AwayLogo));
             var bc = new BrushConverter();
