@@ -111,13 +111,17 @@ namespace ScoreDisplay
             {
                 DateTime startDate = new DateTime();
                 DateTime.TryParse(game.competitions[0].startDate, out startDate);
-                vm.HomeStarter = game.competitions[0].competitors[0].probables.First().athlete.displayName;
-                vm.AwayStarter = game.competitions[0].competitors[1].probables.First().athlete.displayName;
+                var homeStarter = game.competitions[0].competitors[0].probables.First();
+                var awayStarter = game.competitions[0].competitors[1].probables.First();
+                vm.HomeStarter = homeStarter.athlete.displayName;
+                vm.AwayStarter = awayStarter.athlete.displayName;
+                vm.HomeStarterStats = GetPitcherStats(homeStarter);
+                vm.AwayStarterStats = GetPitcherStats(awayStarter);
                 vm.Moneyline = game.competitions[0].odds[0].details;
                 vm.OverUnder = game.competitions[0].odds[0].overUnder.ToString();
                 mlbPage.GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
-                mlbPage.Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter;
-                mlbPage.Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter;
+                mlbPage.Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
+                mlbPage.Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
                 mlbPage.Info3.Text = vm.Moneyline;
                 mlbPage.Info4.Text = "O/U: " + vm.OverUnder;
             }
@@ -139,6 +143,21 @@ namespace ScoreDisplay
             mlbPage.HomeErrors.Text = vm.HomeErrors.ToString();
             mlbPage.AwayErrors.Text = vm.AwayErrors.ToString();
             return mlbPage;
+        }
+
+        private string GetPitcherStats(Probable pitcher)
+        { 
+            var wins = pitcher.statistics.FirstOrDefault(x => x.name.ToLower() == "wins");
+            var losses = pitcher.statistics.FirstOrDefault(x => x.name.ToLower() == "losses");
+            var era = pitcher.statistics.FirstOrDefault(x => x.name.ToLower() == "era");
+            if (wins != null && losses != null && era!= null)
+            {
+                return " " + wins.displayValue + "-" + losses.displayValue + " (" + era.displayValue + " ERA)";
+            }
+            else
+            {
+                return " No Data";
+            }
         }
     }
 }

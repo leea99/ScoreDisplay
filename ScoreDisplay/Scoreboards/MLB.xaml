@@ -6,149 +6,164 @@
       xmlns:local="clr-namespace:ScoreDisplay.Scoreboards"
       mc:Ignorable="d"
       Title="MLB">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Viewbox Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0" StretchDirection="DownOnly">
-                    <TextBlock Text="MLB Scores" FontSize="72" FontWeight="Bold"></TextBlock>
-                </Viewbox>
-                <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                    <TextBlock Text="Runs" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
-                </Viewbox>
-                <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                    <TextBlock Text="Hits" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
-                </Viewbox>
-                <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                    <TextBlock Text="Errors" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
-                </Viewbox>
-                <Grid Grid.Row="2" Grid.Column="0">
+    <Page.Background>
+        <ImageBrush x:Name="background"/>
+    </Page.Background>
+    <Page.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </Page.Resources>
+    <Viewbox>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <Grid MinWidth="1900">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border BorderBrush="Black" BorderThickness="3,3,0,3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
-                        <Image x:Name="HomeTeam" MaxHeight="350" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Border>
-                    <Border BorderBrush="Black" BorderThickness="0,3,3,0" Margin="0,0,0,-2" Grid.Row="0" Grid.Column="1">
-                        <Viewbox VerticalAlignment="Bottom" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                            <TextBlock x:Name="HomeTeamName" Grid.Row="0" Grid.Column="1" Text="" FontSize="50"/>
-                        </Viewbox>
-                    </Border>
-                    <Border BorderBrush="Black" BorderThickness="0,0,3,3" Margin="0,0,0,-1" Grid.Row="1" Grid.Column="1">
-                        <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                            <TextBlock x:Name="HomeTeamRecord" Grid.Row="1" Grid.Column="1" Text="" FontSize="30" />
-                        </Viewbox>
-                    </Border>
-                </Grid>
-                <Border BorderBrush="Black" Grid.Row="2" Grid.Column="1" BorderThickness="3" Margin="-1,0,0,-1">
-                    <TextBlock x:Name="HomeScore" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
-                </Border>
-                <Border BorderBrush="Black" Grid.Row="2" Grid.Column="2" BorderThickness="3" Margin="-1,0,0,-1">
-                    <TextBlock x:Name="HomeHits" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
-                </Border>
-                <Border BorderBrush="Black" Grid.Row="2" Grid.Column="3" BorderThickness="3" Margin="-1,0,0,-1">
-                    <TextBlock x:Name="HomeErrors" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
-                </Border>
-                <Grid Grid.Row="3" Grid.Column="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Border BorderBrush="Black" BorderThickness="3,3,0,3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
-                        <Image x:Name="AwayTeam" MaxHeight="350" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Border>
-                    <Border BorderBrush="Black" BorderThickness="0,3,3,0" Grid.Row="0" Grid.Column="1">
-                        <Viewbox VerticalAlignment="Bottom" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                            <TextBlock x:Name="AwayTeamName" Grid.Row="0" Grid.Column="1" Text="" FontSize="50"/>
-                        </Viewbox>
-                    </Border>
-                    <Border BorderBrush="Black" BorderThickness="0,0,3,3" Grid.Row="1" Grid.Column="1">
-                        <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                            <TextBlock x:Name="AwayTeamRecord" Grid.Row="1" Grid.Column="1" Text="" FontSize="30" />
-                        </Viewbox>
-                    </Border>
-                </Grid>
-                <Border BorderBrush="Black" Grid.Row="3" Grid.Column="1" BorderThickness="3" Margin="-1,0,0,0">
-                    <TextBlock x:Name="AwayScore" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
-                </Border>
-                <Border BorderBrush="Black" Grid.Row="3" Grid.Column="2" BorderThickness="3" Margin="-1,0,0,0">
-                    <TextBlock x:Name="AwayHits" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
-                </Border>
-                <Border BorderBrush="Black" Grid.Row="3" Grid.Column="3" BorderThickness="3" Margin="-1,0,0,0">
-                    <TextBlock x:Name="AwayErrors" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
-                </Border>
-                <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
-                    <Grid>
+                    <Viewbox Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0" StretchDirection="DownOnly">
+                        <TextBlock Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0" Text="MLB Scores" FontSize="70" FontWeight="Bold"></TextBlock>
+                    </Viewbox>
+                    <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" StretchDirection="DownOnly">
+                        <TextBlock Text="Runs" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
+                    </Viewbox>
+                    <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" StretchDirection="DownOnly">
+                        <TextBlock Text="Hits" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
+                    </Viewbox>
+                    <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" StretchDirection="DownOnly">
+                        <TextBlock Text="Errors" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
+                    </Viewbox>
+                    <Grid Grid.Row="2" Grid.Column="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Viewbox VerticalAlignment="Top"  Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info1" BorderThickness="0" Text="" FontSize="72"></TextBox>
-                        </Viewbox>
-                        <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info2" BorderThickness="0" Text="" FontSize="72"></TextBox>
-                        </Viewbox>
-                        <Viewbox VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info3" BorderThickness="0" Text="" FontSize="72"></TextBox>
-                        </Viewbox>
-                        <Viewbox VerticalAlignment="Top" Grid.Row="3" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                            <TextBox x:Name="Info4" BorderThickness="0" Text="" FontSize="72"></TextBox>
-                        </Viewbox>
-                    </Grid>
-                </StackPanel>
-                <StackPanel Grid.Row="4" Grid.Column="3">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <Image x:Name="OnBase" Grid.Row="0"></Image>
-                        <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                            <TextBox x:Name="GameStatus" BorderThickness="0" Grid.Row="1" Text="Test" FontSize="72"></TextBox>
-                        </Viewbox>
+                        <Border BorderBrush="Black" BorderThickness="3,3,0,3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+                            <Image x:Name="HomeTeam" MaxHeight="350" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Border BorderBrush="Black" BorderThickness="0,3,3,0" Margin="0,0,0,-2" Grid.Row="0" Grid.Column="1" Padding="0 0 20 0">
+                            <Viewbox VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                <TextBlock x:Name="HomeTeamName" Grid.Row="0" Grid.Column="1" Text="" FontSize="50"/>
+                            </Viewbox>
+                        </Border>
+                        <Border BorderBrush="Black" BorderThickness="0,0,3,3" Margin="0,0,0,-1" Grid.Row="1" Grid.Column="1">
+                            <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
+                                <TextBlock x:Name="HomeTeamRecord" Grid.Row="1" Grid.Column="1" Text="" FontSize="30" />
+                            </Viewbox>
+                        </Border>
                     </Grid>
-                </StackPanel>
-            </Grid>
-        </StackPanel>
-    </Grid>
+                    <Border BorderBrush="Black" Grid.Row="2" Grid.Column="1" BorderThickness="3" Margin="-1,0,0,-1">
+                        <TextBlock x:Name="HomeScore" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
+                    </Border>
+                    <Border BorderBrush="Black" Grid.Row="2" Grid.Column="2" BorderThickness="3" Margin="-1,0,0,-1">
+                        <TextBlock x:Name="HomeHits" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
+                    </Border>
+                    <Border BorderBrush="Black" Grid.Row="2" Grid.Column="3" BorderThickness="3" Margin="-1,0,0,-1">
+                        <TextBlock x:Name="HomeErrors" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
+                    </Border>
+                    <Grid Grid.Row="3" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="Black" BorderThickness="3,3,0,3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+                            <Image x:Name="AwayTeam" MaxHeight="350" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Border BorderBrush="Black" BorderThickness="0,3,3,0" Grid.Row="0" Grid.Column="1" Padding="0 0 30 0">
+                            <Viewbox VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                <TextBlock x:Name="AwayTeamName" Grid.Row="0" Grid.Column="1" Text="" FontSize="50"/>
+                            </Viewbox>
+                        </Border>
+                        <Border BorderBrush="Black" BorderThickness="0,0,3,3" Grid.Row="1" Grid.Column="1">
+                            <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
+                                <TextBlock x:Name="AwayTeamRecord" Grid.Row="1" Grid.Column="1" Text="" FontSize="30" />
+                            </Viewbox>
+                        </Border>
+                    </Grid>
+                    <Border BorderBrush="Black" Grid.Row="3" Grid.Column="1" BorderThickness="3" Margin="-1,0,0,0">
+                        <TextBlock x:Name="AwayScore" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
+                    </Border>
+                    <Border BorderBrush="Black" Grid.Row="3" Grid.Column="2" BorderThickness="3" Margin="-1,0,0,0">
+                        <TextBlock x:Name="AwayHits" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
+                    </Border>
+                    <Border BorderBrush="Black" Grid.Row="3" Grid.Column="3" BorderThickness="3" Margin="-1,0,0,0">
+                        <TextBlock x:Name="AwayErrors" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72"/>
+                    </Border>
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Viewbox VerticalAlignment="Top"  Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                                <TextBox x:Name="Info1" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                            </Viewbox>
+                            <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                                <TextBox x:Name="Info2" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                            </Viewbox>
+                            <Viewbox VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                                <TextBox x:Name="Info3" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                            </Viewbox>
+                            <Viewbox VerticalAlignment="Top" Grid.Row="3" HorizontalAlignment="Left" StretchDirection="DownOnly">
+                                <TextBox x:Name="Info4" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                            </Viewbox>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Image x:Name="OnBase" Grid.Row="0"></Image>
+                            <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
+                                <TextBox x:Name="GameStatus" BorderThickness="0" Grid.Row="1" Text="Test" FontSize="36"></TextBox>
+                            </Viewbox>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Viewbox>
 </Page>

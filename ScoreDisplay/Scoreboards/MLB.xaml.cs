@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,19 @@ namespace ScoreDisplay.Scoreboards
         public MLB()
         {
             InitializeComponent();
+            var path = Directory.GetCurrentDirectory();
+            var testPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(path, @"..\..\..\"));
+            testPath = System.IO.Path.Combine(testPath, "Images", "background.png");
+            BitmapImage image = new BitmapImage(new Uri(testPath));
+            background.ImageSource = image;
+            if (HomeTeam.Width > AwayTeam.Width)
+            {
+                HomeTeam.Width = AwayTeam.Width;
+            }
+            else
+            {
+                AwayTeam.Width = AwayTeam.Width;
+            }
         }
     }
 }
