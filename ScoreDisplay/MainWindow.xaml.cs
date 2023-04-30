@@ -1,30 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Text.Json;
 using ScoreDisplay.Models;
 using Newtonsoft.Json;
-using System.Globalization;
 using ScoreDisplay.Scoreboards;
 using ScoreDisplay.ViewModels;
-using System.Threading;
 using System.Collections.ObjectModel;
-using System.Timers;
-using System.Reflection.Metadata;
 using System.Net.Http;
+using System.IO;
 
 namespace ScoreDisplay
 {
@@ -33,6 +20,7 @@ namespace ScoreDisplay
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\"));
         private System.Threading.Timer _timer;
         private int _currentIndex = 0;
         private ObservableCollection<dynamic> _items = new ObservableCollection<dynamic>();
@@ -88,21 +76,19 @@ namespace ScoreDisplay
             vm.AwayHits = game.competitions[0].competitors[1].hits;
             vm.HomeErrors = game.competitions[0].competitors[0].errors;
             vm.AwayErrors = game.competitions[0].competitors[1].errors;
+            var gameId = game.id;
             if (game.competitions[0].status.type.state == "in")
             {
                 using (var client = new HttpClient())
-                {
-                    var gameId = game.id;
+                { 
                     var response = await client.GetAsync("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=" + gameId);
-                    var content = await response.Content.ReadAsStringAsync();
                     var jsonString = await response.Content.ReadAsStringAsync();
-
                     // deserialize the JSON string into a dynamic object
                     dynamic jsonObject = JsonConvert.DeserializeObject(jsonString);
-
                     // get the "Situation" object from the dynamic object
-                    var test = jsonObject.situation;
-                    Situation situationObject = JsonConvert.DeserializeObject<Situation>(jsonObject.situation.ToString());
+                    Situation situation = JsonConvert.DeserializeObject<Situation>(jsonObject.situation.ToString());
+                    mlbPage.OnBase.Source = new Uri(GetOnBaseGraphic(situation));
+                    mlbPage.Outs.Source = new Uri(GetOuts(situation));
                 }
                 vm.Inning = game.competitions[0].status.type.detail;
                 mlbPage.GameStatus.Text = "Inning: " + vm.Inning;
@@ -125,8 +111,33 @@ namespace ScoreDisplay
                 mlbPage.Info3.Text = vm.Moneyline;
                 mlbPage.Info4.Text = "O/U: " + vm.OverUnder;
             }
-            else if (game.competitions[0].status.type.state == "post")
+            else if (game.competitions[0].status.type.state == "post" && game.competitions[0].status.type.completed)
             {
+                var winPitcher = game.competitions[0].status.featuredAthletes.FirstOrDefault(x => x.name == "winningPitcher");
+                var lossPitcher = game.competitions[0].status.featuredAthletes.FirstOrDefault(x => x.name == "losingPitcher");
+                var savePitcher = game.competitions[0].status.featuredAthletes.FirstOrDefault(x => x.name == "savingPitcher");
+                if (winPitcher != null)
+                {
+                    mlbPage.Info1.Text = "W: " + winPitcher.athlete.displayName;
+                }
+                if (lossPitcher != null)
+                {
+                    mlbPage.Info2.Text = "L: " + lossPitcher.athlete.displayName;
+                }
+                if (savePitcher != null)
+                {
+                    mlbPage.Info3.Text = "SV: " + savePitcher.athlete.displayName;
+                }
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=" + gameId);
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    // deserialize the JSON string into a dynamic object
+                    dynamic jsonObject = JsonConvert.DeserializeObject(jsonString);
+                    var players = jsonObject.boxscore.players;
+                    // get the "Situation" object from the dynamic object
+                    Models.BaseballGame.Rootobject situation = JsonConvert.DeserializeObject<Models.BaseballGame.Rootobject>(jsonString);
+                }
                 mlbPage.GameStatus.Text = "Final";
             }
             mlbPage.HomeTeam.Source = new BitmapImage(new Uri(vm.HomeLogo));
@@ -158,6 +169,49 @@ namespace ScoreDisplay
             {
                 return " No Data";
             }
+        }
+
+        private string GetOnBaseGraphic(Situation situation)
+        {
+            string fileName = "";
+            if (situation.onFirst != null)
+            {
+                fileName += "First";
+            }
+            if (situation.onSecond != null)
+            {
+                fileName += "Second";
+            }
+            if (situation.onThird != null)
+            {
+                fileName += "Third";
+            }
+            if (fileName == "")
+            {
+                return System.IO.Path.Combine(path, "Images", "Baseball", "NoBase.svg");
+            }
+            else
+            {
+                return System.IO.Path.Combine(path, "Images", "Baseball", fileName + ".svg");
+            }
+        }
+
+        private string GetOuts(Situation situation)
+        {
+            string fileName = "out.svg";
+            switch (situation.outs)
+            {
+                case 0:
+                    fileName = 0 + fileName;
+                    break;
+                case 1:
+                    fileName = 1 + fileName;
+                    break;
+                case 2:
+                    fileName = 2 + fileName;
+                    break;
+            }
+            return System.IO.Path.Combine(path, "Images", "Baseball", fileName);
         }
     }
 }

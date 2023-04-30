@@ -182,6 +182,19 @@ namespace ScoreDisplay.Models
         public string displayClock { get; set; }
         public int period { get; set; }
         public Type3 type { get; set; }
+        public List<FeaturedAthlete> featuredAthletes { get; set; }
+    }
+
+    public class FeaturedAthlete
+    {
+        public string name { get; set; }
+        public string displayName { get; set; }
+        public string shortDisplayName { get; set; }
+        public string abbreviation { get; set; }
+        public int playerId { get; set; }
+        public Athlete athlete { get; set; }
+        public Team team { get; set; }
+        public List<Statistic> statistics { get; set; }
     }
 
     public class Type3
@@ -506,6 +519,8 @@ namespace ScoreDisplay.Models
         public int strikes { get; set; }
         public int outs { get; set; }
         public Onfirst onFirst { get; set; }
+        public Onfirst onSecond { get; set; }
+        public Onfirst onThird { get; set; }
         public Pitcher pitcher { get; set; }
         public Batter batter { get; set; }
         public Situationnote[] situationNotes { get; set; }
@@ -535,6 +550,105 @@ namespace ScoreDisplay.Models
     {
         public string type { get; set; }
         public string text { get; set; }
+    }  
+    public class Player
+    {
+        public Team team { get; set; }
+        public BoxStatistic[] statistics { get; set; }
     }
 
+    public class Headshot
+    {
+        public string href { get; set; }
+        public string alt { get; set; }
+    }
+   
+
+    public class Position1
+    {
+        public string _ref { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string displayName { get; set; }
+        public string abbreviation { get; set; }
+        public bool leaf { get; set; }
+        public Parent parent { get; set; }
+        public Statistics statistics { get; set; }
+    }
+
+    public class Parent
+    {
+        public string _ref { get; set; }
+    }
+
+    public class Statistics
+    {
+        public string _ref { get; set; }
+    }
+
+    public class Hotzone
+    {
+        public int configurationId { get; set; }
+        public string name { get; set; }
+        public bool active { get; set; }
+        public int splitTypeId { get; set; }
+        public int season { get; set; }
+        public int seasonType { get; set; }
+        public Zone[] zones { get; set; }
+    }
+
+    public class Zone
+    {
+        public int zoneId { get; set; }
+        public int xMin { get; set; }
+        public int xMax { get; set; }
+        public int yMin { get; set; }
+        public int yMax { get; set; }
+        public int atBats { get; set; }
+        public int hits { get; set; }
+        public float battingAvg { get; set; }
+        public float battingAvgScore { get; set; }
+        public float slugging { get; set; }
+        public float sluggingScore { get; set; }
+    }
+
+    public class Position2
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public string displayName { get; set; }
+        public string abbreviation { get; set; }
+    }
+
+    public class Position3
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public string displayName { get; set; }
+        public string abbreviation { get; set; }
+    }
+
+    public class Atbat
+    {
+        public string id { get; set; }
+        public string atBatId { get; set; }
+        public string playId { get; set; }
+    }
+
+    public class Note
+    {
+        public string type { get; set; }
+        public string text { get; set; }
+    }
+    public class BoxStatistic
+    {
+        public string type { get; set; }
+        public string[] names { get; set; }
+        public string[] keys { get; set; }
+        public string[] labels { get; set; }
+        public string[] descriptions { get; set; }
+        public string[] totals { get; set; }
+        public Athlete[] athletes { get; set; }
+    }
 }
+

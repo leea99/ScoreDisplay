@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ScoreDisplay.Scoreboards"
+      xmlns:svg="clr-namespace:SharpVectors.Renderers.Wpf;assembly=SharpVectors.Renderers.Wpf" xmlns:svg1="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d"
       Title="MLB">
     <Page.Background>
@@ -136,6 +137,9 @@
                             <Viewbox VerticalAlignment="Top"  Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly">
                                 <TextBox x:Name="Info1" BorderThickness="0" Text="" FontSize="36"></TextBox>
                             </Viewbox>
+                            <Viewbox x:Name="OnBaseViewbox" VerticalAlignment="Top" Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly" Visibility="Hidden">
+                                
+                            </Viewbox>
                             <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
                                 <TextBox x:Name="Info2" BorderThickness="0" Text="" FontSize="36"></TextBox>
                             </Viewbox>
@@ -155,11 +159,13 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"></RowDefinition>
                                 <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
                             </Grid.RowDefinitions>
-                            <Image x:Name="OnBase" Grid.Row="0"></Image>
-                            <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" StretchDirection="DownOnly">
-                                <TextBox x:Name="GameStatus" BorderThickness="0" Grid.Row="1" Text="Test" FontSize="36"></TextBox>
+                            <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" StretchDirection="DownOnly">
+                                <TextBox x:Name="GameStatus" BorderThickness="0" FontSize="36"></TextBox>
                             </Viewbox>
+                            <svg1:SvgViewbox x:Name="OnBase" Grid.Row="1" Width="100" Height="100"/>
+                            <svg1:SvgViewbox x:Name="Outs" Grid.Row="2" Width="100" Height="100"/>
                         </Grid>
                     </StackPanel>
                 </Grid>
