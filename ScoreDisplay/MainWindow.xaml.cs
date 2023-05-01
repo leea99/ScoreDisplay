@@ -48,7 +48,7 @@ namespace ScoreDisplay
                 List<MLB> graphics = new List<MLB>();
                 foreach (var game in baseballData.events)
                 {
-                    graphics.Add(await GetMLBGameScore(game));
+                    graphics.Add(await new MLB().GetMLBGameScore(game));
                 }
                 foreach (var g in graphics)
                 {
@@ -106,6 +106,11 @@ namespace ScoreDisplay
                 vm.Moneyline = game.competitions[0].odds[0].details;
                 vm.OverUnder = game.competitions[0].odds[0].overUnder.ToString();
                 mlbPage.GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
+                if (game.competitions[0].broadcasts.Length > 0)
+                {
+                    mlbPage.ChannelBox.Visibility = Visibility.Visible;
+                    mlbPage.Channel.Text = game.competitions[0].broadcasts[0].names[0];
+                }
                 mlbPage.Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
                 mlbPage.Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
                 mlbPage.Info3.Text = vm.Moneyline;

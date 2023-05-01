@@ -164,6 +164,9 @@
                             <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" StretchDirection="DownOnly">
                                 <TextBox x:Name="GameStatus" BorderThickness="0" FontSize="36"></TextBox>
                             </Viewbox>
+                            <Viewbox x:Name="ChannelBox" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" StretchDirection="DownOnly" Visibility="Hidden">
+                                <TextBox x:Name="Channel" BorderThickness="0" FontSize="36"></TextBox>
+                            </Viewbox>
                             <svg1:SvgViewbox x:Name="OnBase" Grid.Row="1" Width="100" Height="100"/>
                             <svg1:SvgViewbox x:Name="Outs" Grid.Row="2" Width="100" Height="100"/>
                         </Grid>
