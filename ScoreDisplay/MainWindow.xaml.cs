@@ -116,27 +116,59 @@ namespace ScoreDisplay
                 var winPitcher = game.competitions[0].status.featuredAthletes.FirstOrDefault(x => x.name == "winningPitcher");
                 var lossPitcher = game.competitions[0].status.featuredAthletes.FirstOrDefault(x => x.name == "losingPitcher");
                 var savePitcher = game.competitions[0].status.featuredAthletes.FirstOrDefault(x => x.name == "savingPitcher");
+                string winPitcherTxt = "";
+                string lossPitcherTxt = "";
+                string savePitcherTxt = "";
                 if (winPitcher != null)
                 {
-                    mlbPage.Info1.Text = "W: " + winPitcher.athlete.displayName;
+                    winPitcherTxt = "W: " + winPitcher.athlete.displayName;
                 }
                 if (lossPitcher != null)
                 {
-                    mlbPage.Info2.Text = "L: " + lossPitcher.athlete.displayName;
+                    lossPitcherTxt = "L: " + lossPitcher.athlete.displayName;
                 }
                 if (savePitcher != null)
                 {
-                    mlbPage.Info3.Text = "SV: " + savePitcher.athlete.displayName;
+                    savePitcherTxt = "SV: " + savePitcher.athlete.displayName;
                 }
-                using (var client = new HttpClient())
+                if (winPitcherTxt != null && lossPitcherTxt != null && savePitcherTxt != null)
                 {
-                    var response = await client.GetAsync("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=" + gameId);
-                    var jsonString = await response.Content.ReadAsStringAsync();
-                    // deserialize the JSON string into a dynamic object
-                    dynamic jsonObject = JsonConvert.DeserializeObject(jsonString);
-                    var players = jsonObject.boxscore.players;
-                    // get the "Situation" object from the dynamic object
-                    Models.BaseballGame.Rootobject situation = JsonConvert.DeserializeObject<Models.BaseballGame.Rootobject>(jsonString);
+                    using (var client = new HttpClient())
+                    {
+                        var response = await client.GetAsync("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=" + gameId);
+                        var jsonString = await response.Content.ReadAsStringAsync();
+                        var settings = new JsonSerializerSettings();
+                        settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
+                        // deserialize the JSON string into a dynamic object
+                        dynamic jsonObject = JsonConvert.DeserializeObject(jsonString, settings);
+                        var players = jsonObject.boxscore.players;
+                        // get the "Situation" object from the dynamic object
+                        Models.BaseballGame.Rootobject gameLog = JsonConvert.DeserializeObject<Models.BaseballGame.Rootobject>(jsonString, settings);
+                        var test = gameLog.boxscore.players;
+                        foreach (var team in test)
+                        {
+                            var pitchers = team.statistics.FirstOrDefault(x => x.type == "pitching");
+                            Dictionary<string, int> pitchStats = ClassToDict(pitchers);
+                            foreach (var p in pitchers.athletes)
+                            {
+                                if (p.athlete.id == winPitcher.playerId)
+                                {
+                                    winPitcherTxt += " " + p.stats[pitchStats["IP"]] + " IP, " + p.stats[pitchStats["ER"]] + " ER, " + p.stats[pitchStats["K"]] + " K, " + p.stats[pitchStats["BB"]] + " BB";
+                                }
+                                else if (p.athlete.id == lossPitcher.playerId)
+                                {
+                                    lossPitcherTxt += " " + p.stats[pitchStats["IP"]] + " IP, " + p.stats[pitchStats["ER"]] + " ER, " + p.stats[pitchStats["K"]] + " K, " + p.stats[pitchStats["BB"]] + " BB";
+                                }
+                                else if (savePitcher != null && p.athlete.id == savePitcher.playerId)
+                                {
+                                    savePitcherTxt += " " + p.stats[pitchStats["IP"]] + " IP, " + p.stats[pitchStats["ER"]] + " ER, " + p.stats[pitchStats["K"]] + " K, " + p.stats[pitchStats["BB"]] + " BB";
+                                }
+                            }
+                        }
+                        mlbPage.Info1.Text = winPitcherTxt;
+                        mlbPage.Info2.Text = lossPitcherTxt;
+                        mlbPage.Info3.Text = savePitcherTxt;
+                    }
                 }
                 mlbPage.GameStatus.Text = "Final";
             }
@@ -154,6 +186,18 @@ namespace ScoreDisplay
             mlbPage.HomeErrors.Text = vm.HomeErrors.ToString();
             mlbPage.AwayErrors.Text = vm.AwayErrors.ToString();
             return mlbPage;
+        }
+
+        private Dictionary<string, int> ClassToDict(Models.BaseballGame.Statistic1? pitchers)
+        {
+            Dictionary<string, int> dict = new Dictionary<string, int>();
+            int i = 0;
+            foreach (string name in pitchers.names)
+            {
+                dict[name] = i;
+                i++;
+            }
+            return dict;
         }
 
         private string GetPitcherStats(Probable pitcher)
