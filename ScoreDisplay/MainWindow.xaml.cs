@@ -33,12 +33,15 @@ namespace ScoreDisplay
             //_timer = new System.Threading.Timer(OnCallBack, null, 0, 50000);
         }
 
-        public void GetSportsData()
+        public async Task GetSportsData()
         {
-            GetMLBData();
+            /*while (true) {
+                await GetMLBData();
+            }*/
+            await GetMLBData(); //Dev mode
         }
 
-        private async void GetMLBData()
+        private async Task GetMLBData()
         {
             using (var client = new HttpClient())
             {
