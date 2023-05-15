@@ -2,10 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="AvaloniaScoreDisplay.Scoreboards.MLB"
+	    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+	    x:Class="AvaloniaScoreDisplay.Scoreboards.MLB"
         >
-  <StackPanel>
+  <StackPanel x:Name="mlbStackPanel">
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="20"/>
@@ -120,19 +120,19 @@
                 <RowDefinition Height="*"></RowDefinition>
               </Grid.RowDefinitions>
               <Viewbox VerticalAlignment="Top"  Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                <TextBox x:Name="Info1" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                <TextBox x:Name="Info1" BorderThickness="0" Text="" FontSize="36" IsReadOnly="True"></TextBox>
               </Viewbox>
               <Viewbox x:Name="OnBaseViewbox" VerticalAlignment="Top" Grid.Row="0" HorizontalAlignment="Left" StretchDirection="DownOnly" IsVisible="False">
 
               </Viewbox>
               <Viewbox VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                <TextBox x:Name="Info2" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                <TextBox x:Name="Info2" BorderThickness="0" Text="" FontSize="36" IsReadOnly="True"></TextBox>
               </Viewbox>
               <Viewbox VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                <TextBox x:Name="Info3" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                <TextBox x:Name="Info3" BorderThickness="0" Text="" FontSize="36" IsReadOnly="True"></TextBox>
               </Viewbox>
               <Viewbox VerticalAlignment="Top" Grid.Row="3" HorizontalAlignment="Left" StretchDirection="DownOnly">
-                <TextBox x:Name="Info4" BorderThickness="0" Text="" FontSize="36"></TextBox>
+                <TextBox x:Name="Info4" BorderThickness="0" Text="" FontSize="36" IsReadOnly="True"></TextBox>
               </Viewbox>
             </Grid>
           </StackPanel>
@@ -147,13 +147,14 @@
                 <RowDefinition Height="*"></RowDefinition>
               </Grid.RowDefinitions>
               <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" StretchDirection="DownOnly">
-                <TextBox x:Name="GameStatus" BorderThickness="0" FontSize="36"></TextBox>
+                <TextBox x:Name="GameStatus" BorderThickness="0" FontSize="36" IsReadOnly="True"></TextBox>
               </Viewbox>
               <Viewbox x:Name="ChannelBox" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" StretchDirection="DownOnly" IsVisible="False">
-                <TextBox x:Name="Channel" BorderThickness="0" FontSize="36"></TextBox>
+                <TextBox x:Name="Channel" BorderThickness="0" FontSize="36" IsReadOnly="True"></TextBox>
               </Viewbox>
-              <Image x:Name="OnBase" Grid.Row="1" Width="100" Height="100"/>
-            </Grid>
+			  <Image x:Name="OnBase" Grid.Row="1" Height="100" Width="100"/>
+			  <Image x:Name="Outs" Grid.Row="2" Height="100" Width="100"/>
+			</Grid>
           </StackPanel>
         </Grid>
       </StackPanel>

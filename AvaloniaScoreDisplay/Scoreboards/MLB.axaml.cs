@@ -10,9 +10,7 @@ using System;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.ViewModels;
 using Avalonia.Media.Imaging;
-using System.Net;
-using Avalonia.Svg.Skia;
-using Svg;
+
 
 namespace AvaloniaScoreDisplay.Scoreboards
 {
@@ -231,14 +229,8 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     return;
                 }
                 Situation situation = JsonConvert.DeserializeObject<Situation>(jsonObject.situation.ToString());
-                try
-                {
-                    //OnBase.Source = new SvgDocument(GetOnBaseGraphic(situation));
-                }
-                catch (Exception ex)
-                {
-
-                }
+                OnBase.Source = new Bitmap(GetOnBaseGraphic(situation));
+                Outs.Source = new Bitmap(GetOuts(situation));
             }
             vm.Inning = game.competitions[0].status.type.detail;
             GameStatus.Text = "Inning: " + vm.Inning;
@@ -291,17 +283,17 @@ namespace AvaloniaScoreDisplay.Scoreboards
             }
             if (fileName == "")
             {
-                return System.IO.Path.Combine(path, "Images", "Baseball", "NoBase.svg");
+                return System.IO.Path.Combine(path, "Images", "Baseball", "NoBase.png");
             }
             else
             {
-                return System.IO.Path.Combine(path, "Images", "Baseball", fileName + ".svg");
+                return System.IO.Path.Combine(path, "Images", "Baseball", fileName + ".png");
             }
         }
 
         private string GetOuts(Situation situation)
         {
-            string fileName = "out.svg";
+            string fileName = "out.png";
             switch (situation.outs)
             {
                 case 0:
