@@ -14,6 +14,7 @@ namespace AvaloniaScoreDisplay.Views
         public MainWindow()
         {
             InitializeComponent();
+            WindowState = WindowState.Maximized;
             GetSportsData();
         }
 
