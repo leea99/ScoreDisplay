@@ -16,7 +16,6 @@ namespace AvaloniaScoreDisplay.Views
         private static readonly ILog log = LogManager.GetLogger(typeof(App));
         public MainWindow()
         {
-            log.Debug("Main Window");
             InitializeComponent();
             WindowState = WindowState.Maximized;
             XmlConfigurator.Configure();
@@ -41,11 +40,11 @@ namespace AvaloniaScoreDisplay.Views
                     var content = await response.Content.ReadAsStringAsync();
                     MLBData baseballData = JsonConvert.DeserializeObject<MLBData>(content);
                     List<MLB> graphics = new List<MLB>();
+                    log.Debug(this.Width + "x" + this.Height);
                     foreach (var game in baseballData.events)
                     {
                         try
                         {
-                            log.Debug(game.id);
                             graphics.Add(await new MLB().GetMLBGameScore(game));
                         }
                         catch (Exception ex)

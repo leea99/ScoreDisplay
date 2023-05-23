@@ -41,7 +41,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
         public async Task<MLB> GetMLBGameScore(Event game)
         {
             var vm = new BaseballVM();
-            GetGeneralAttributes(game, vm);
+            await GetGeneralAttributes(game, vm);
             var gameId = game.id;
             if (game.competitions[0].status.type.state == "in")
             {
