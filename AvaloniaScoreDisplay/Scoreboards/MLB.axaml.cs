@@ -21,9 +21,8 @@ namespace AvaloniaScoreDisplay.Scoreboards
         {
             InitializeComponent();
             var path = Directory.GetCurrentDirectory();
-            var testPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(path, @"..\..\..\"));
-            testPath = System.IO.Path.Combine(testPath, "Images", "background.png");
-            var bitmap = new Bitmap(testPath);
+            path = System.IO.Path.Combine(path, "Images", "background.png");
+            var bitmap = new Bitmap(path);
             Background = new ImageBrush(bitmap)
             {
                 Stretch = Stretch.Fill

@@ -24,10 +24,10 @@ namespace AvaloniaScoreDisplay.Views
 
         public async Task GetSportsData()
         {
-            /*while (true) {
+            while (true) {
                 await GetMLBData();
-            }*/
-            await GetMLBData(); //Dev mode
+            }
+            //await GetMLBData(); //Dev mode
         }
 
         private async Task GetMLBData()
@@ -40,7 +40,6 @@ namespace AvaloniaScoreDisplay.Views
                     var content = await response.Content.ReadAsStringAsync();
                     MLBData baseballData = JsonConvert.DeserializeObject<MLBData>(content);
                     List<MLB> graphics = new List<MLB>();
-                    log.Debug(this.Width + "x" + this.Height);
                     foreach (var game in baseballData.events)
                     {
                         try
@@ -57,7 +56,7 @@ namespace AvaloniaScoreDisplay.Views
                         try
                         {
                             Content = g;
-                            await Task.Delay(5000);
+                            await Task.Delay(7000);
                         }
                         catch (Exception ex) { }
                     }
