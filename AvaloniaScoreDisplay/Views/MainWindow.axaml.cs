@@ -40,11 +40,15 @@ namespace AvaloniaScoreDisplay.Views
                     var content = await response.Content.ReadAsStringAsync();
                     MLBData baseballData = JsonConvert.DeserializeObject<MLBData>(content);
                     List<MLB> graphics = new List<MLB>();
+                    var height = this.Height;
                     foreach (var game in baseballData.events)
                     {
                         try
                         {
-                            graphics.Add(await new MLB().GetMLBGameScore(game));
+                            var graphic = await new MLB().GetMLBGameScore(game);
+                            graphic.HomeTeam.Height = height * .20;
+                            graphic.AwayTeam.Height = height * .20;
+                            graphics.Add(graphic);
                         }
                         catch (Exception ex)
                         {

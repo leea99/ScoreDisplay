@@ -16,7 +16,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
 {
     public partial class MLB : UserControl
     {
-        public static string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\"));
+        public static string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(Directory.GetCurrentDirectory()));
         public MLB()
         {
             InitializeComponent();
