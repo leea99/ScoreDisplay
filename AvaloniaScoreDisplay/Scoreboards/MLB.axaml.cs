@@ -154,7 +154,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     {
                         return;
                     }
-                    var test = gameLog.boxscore.players;
+                    /*var test = gameLog.boxscore.players;
                     foreach (var team in test)
                     {
                         var pitchers = team.statistics.FirstOrDefault(x => x.type == "pitching");
@@ -180,9 +180,10 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     }
                     Info1.Text = winPitcherTxt;
                     Info2.Text = lossPitcherTxt;
-                    Info3.Text = savePitcherTxt;
+                    Info3.Text = savePitcherTxt;*/
                 }
             }
+            GameStatus.FontSize = 60;
             GameStatus.Text = "Final";
         }
 
@@ -206,11 +207,13 @@ namespace AvaloniaScoreDisplay.Scoreboards
             {
                 ChannelBox.IsVisible = true;
                 Channel.Text = game.competitions[0].broadcasts[0].names[0];
+                GameStatus.FontSize = 30;
+                Channel.FontSize = 30;
             }
-            Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
-            Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
-            Info3.Text = vm.Moneyline;
-            Info4.Text = "O/U: " + vm.OverUnder;
+            //Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
+            //Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
+            Info1.Text = vm.Moneyline;
+            Info2.Text = "O/U: " + vm.OverUnder;
         }
 
         private async Task GetInStateAttributes(Event game, BaseballVM vm, string gameId)
@@ -231,6 +234,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
                 OnBase.Source = new Bitmap(GetOnBaseGraphic(situation));
                 Outs.Source = new Bitmap(GetOuts(situation));
             }
+            GameStatus.FontSize = 60;
             vm.Inning = game.competitions[0].status.type.detail;
             GameStatus.Text = "Inning: " + vm.Inning;
         }
