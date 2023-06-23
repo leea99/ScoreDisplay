@@ -20,23 +20,6 @@ namespace AvaloniaScoreDisplay.Views
             WindowState = WindowState.Maximized;
             XmlConfigurator.Configure();
             GetSportsData();
-            this.LayoutUpdated += MainWindowResize;
-        }
-
-        private void MainWindowResize(object? sender, EventArgs e)
-        {
-            try
-            {
-                var contentControl = this.FindControl<Control>("ContentControl");
-                if (this.Height > 0 && contentControl != null)
-                {
-                    //stackPanel.Height = this.Height;
-                    //stackPanel.Width = this.Width;
-                    contentControl.Height = this.Height;
-                    contentControl.Width = this.Width;
-                }
-            }
-            catch (Exception) { }
         }
 
         public async Task GetSportsData()
@@ -77,11 +60,6 @@ namespace AvaloniaScoreDisplay.Views
                         try
                         {
                             Content = g;
-                            if (Content is Control contentControl)
-                            {
-                                contentControl.Width = this.Width;  // Set the desired width
-                                contentControl.Height = this.Height; // Set the desired height
-                            }
                             await Task.Delay(7000);
                         }
                         catch (Exception ex) { }
