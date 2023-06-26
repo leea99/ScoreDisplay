@@ -206,8 +206,8 @@ namespace AvaloniaScoreDisplay.Scoreboards
             GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
             if (game.competitions[0].broadcasts.Length > 0)
             {
-                //ChannelBox.IsVisible = true;
-                //Channel.Text = game.competitions[0].broadcasts[0].names[0];
+                ChannelBox.IsVisible = true;
+                Channel.Text = game.competitions[0].broadcasts[0].names[0];
             }
             //Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
             //Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
