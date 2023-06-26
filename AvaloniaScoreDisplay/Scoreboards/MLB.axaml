@@ -26,17 +26,17 @@
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
 
-          <Viewbox Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0" Stretch="None">
+          <Viewbox Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0">
             <TextBlock Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0" Foreground="White" Text="MLB Scores" FontWeight="Bold"></TextBlock>
           </Viewbox>
           <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Stretch="None">
-            <TextBlock Text="R" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="R" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
           </Viewbox>
           <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Stretch="None">
-            <TextBlock Text="H" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="H" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
           </Viewbox>
           <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" Stretch="None">
-            <TextBlock Text="E" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="E" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
           </Viewbox>
         </Grid>
         <Grid Grid.Row="1">
@@ -77,13 +77,13 @@
             </Border>
           </Grid>
           <Border BorderBrush="White" Grid.Row="0" Grid.Column="1" BorderThickness="1" Margin="0,0,0,-2">
-            <TextBlock x:Name="HomeScore" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="HomeScore" FontSize="100" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           </Border>
           <Border BorderBrush="White" Grid.Row="0" Grid.Column="2" BorderThickness="1" Margin="-2,0,0,-2">
-            <TextBlock x:Name="HomeHits" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="HomeHits" FontSize="100" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           </Border>
           <Border BorderBrush="White" Grid.Row="0" Grid.Column="3" BorderThickness="1" Margin="-2,0,0,-2">
-            <TextBlock x:Name="HomeErrors" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="HomeErrors" FontSize="100" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           </Border>
 
           <Grid Grid.Row="1" Grid.Column="0" Margin="0,1,0,0">
@@ -112,13 +112,13 @@
             </Border>
           </Grid>
           <Border BorderBrush="White" Grid.Row="1" Grid.Column="1" BorderThickness="1" Margin="0,1,0,-4">
-            <TextBlock x:Name="AwayScore" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="AwayScore" FontSize="100" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           </Border>
           <Border BorderBrush="White" Grid.Row="1" Grid.Column="2" BorderThickness="1" Margin="-2,1,0,-4">
-            <TextBlock x:Name="AwayHits" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="AwayHits" FontSize="100" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           </Border>
           <Border BorderBrush="White" Grid.Row="1" Grid.Column="3" BorderThickness="1" Margin="-2,1,0,-4">
-            <TextBlock x:Name="AwayErrors" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="AwayErrors" FontSize="100" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           </Border>
         </Grid>
         <Grid Grid.Row="2">
@@ -131,8 +131,68 @@
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
 
-          <TextBlock Grid.Row="0" Grid.Column="0" Text="Status" HorizontalAlignment="Center" VerticalAlignment="Center" />
-          <TextBlock Grid.Row="0" Grid.Column="1" Text="Espn" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <StackPanel Grid.Row="0" Grid.Column="0" Margin="2,4,0,0">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+              </Grid.RowDefinitions>
+              <Viewbox Stretch="None" VerticalAlignment="Top"  Grid.Row="0" HorizontalAlignment="Left">
+                <TextBlock x:Name="Info1" Foreground="White" Text=""></TextBlock>
+              </Viewbox>
+              <Viewbox x:Name="OnBaseViewbox" VerticalAlignment="Top" Grid.Row="0" HorizontalAlignment="Left" Stretch="None" IsVisible="False">
+
+              </Viewbox>
+              <Viewbox Stretch="None" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Left">
+                <TextBlock x:Name="Info2" Foreground="White"></TextBlock>
+              </Viewbox>
+              <Viewbox Stretch="None" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Left">
+                <TextBlock x:Name="Info3" Foreground="White" Text=""></TextBlock>
+              </Viewbox>
+              <Viewbox Stretch="None" VerticalAlignment="Top" Grid.Row="3" HorizontalAlignment="Left">
+                <TextBlock x:Name="Info4" Foreground="White" Text=""></TextBlock>
+              </Viewbox>
+            </Grid>
+            <Grid Grid.Row="1" HorizontalAlignment="Left">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <Border Grid.Column="0" Padding="5">
+                <Viewbox StretchDirection="DownOnly">
+                  <Image x:Name="OnBase" Grid.Column="0" Height="25"/>
+                </Viewbox>
+              </Border>
+              <Border Grid.Column="1" Padding="5">
+                <Viewbox StretchDirection="DownOnly">
+                  <Image x:Name="Outs"  Grid.Column="1" Height="25"/>
+                </Viewbox>
+              </Border>
+            </Grid>
+          </StackPanel>
+          <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,4,2,0">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+              </Grid.RowDefinitions>
+              <Viewbox Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Row="0">
+                <TextBlock Foreground="White" x:Name="GameStatus"></TextBlock>
+              </Viewbox>
+              <Viewbox Stretch="None" x:Name="ChannelBox" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Row="1" IsVisible="False">
+                <TextBlock Foreground="White" x:Name="Channel"></TextBlock>
+              </Viewbox>
+            </Grid>
+          </StackPanel>
         </Grid>
       </Grid>
     </WrapPanel>
