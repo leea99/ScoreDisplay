@@ -178,12 +178,12 @@ namespace AvaloniaScoreDisplay.Scoreboards
                             }
                         }
                     }
-                    Info1.Text = winPitcherTxt;
-                    Info2.Text = lossPitcherTxt;
-                    Info3.Text = savePitcherTxt;
+                    //Info1.Text = winPitcherTxt;
+                    //Info2.Text = lossPitcherTxt;
+                    //Info3.Text = savePitcherTxt;
                 }
             }
-            GameStatus.Text = "Final";
+            //GameStatus.Text = "Final";
         }
 
         private void GetPreStateAttributes(Event game, BaseballVM vm)
@@ -201,16 +201,16 @@ namespace AvaloniaScoreDisplay.Scoreboards
                 vm.Moneyline = game.competitions[0].odds[0].details;
                 vm.OverUnder = game.competitions[0].odds[0].overUnder.ToString();
             }
-            GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
+            //GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
             if (game.competitions[0].broadcasts.Length > 0)
             {
-                ChannelBox.IsVisible = true;
-                Channel.Text = game.competitions[0].broadcasts[0].names[0];
+                //ChannelBox.IsVisible = true;
+                //Channel.Text = game.competitions[0].broadcasts[0].names[0];
             }
-            Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
-            Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
-            Info3.Text = vm.Moneyline;
-            Info4.Text = "O/U: " + vm.OverUnder;
+            //Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
+            //Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
+            //Info3.Text = vm.Moneyline;
+            //Info4.Text = "O/U: " + vm.OverUnder;
         }
 
         private async Task GetInStateAttributes(Event game, BaseballVM vm, string gameId)
@@ -228,11 +228,11 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     return;
                 }
                 Situation situation = JsonConvert.DeserializeObject<Situation>(jsonObject.situation.ToString());
-                OnBase.Source = new Bitmap(GetOnBaseGraphic(situation));
-                Outs.Source = new Bitmap(GetOuts(situation));
+                //OnBase.Source = new Bitmap(GetOnBaseGraphic(situation));
+                //Outs.Source = new Bitmap(GetOuts(situation));
             }
             vm.Inning = game.competitions[0].status.type.detail;
-            GameStatus.Text = "Inning: " + vm.Inning;
+            //GameStatus.Text = "Inning: " + vm.Inning;
         }
 
         private Dictionary<string, int> ClassToDict(Models.BaseballGame.Statistic1? pitchers)
