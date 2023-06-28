@@ -154,7 +154,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     {
                         return;
                     }
-                    /*var test = gameLog.boxscore.players;
+                    var test = gameLog.boxscore.players;
                     foreach (var team in test)
                     {
                         var pitchers = team.statistics.FirstOrDefault(x => x.type == "pitching");
@@ -178,12 +178,13 @@ namespace AvaloniaScoreDisplay.Scoreboards
                             }
                         }
                     }
-                    Info1.Text = winPitcherTxt;
-                    Info2.Text = lossPitcherTxt;
-                    Info3.Text = savePitcherTxt;*/
+                    //Info1.Text = winPitcherTxt;
+                    //Info2.Text = lossPitcherTxt;
+                    //Info3.Text = savePitcherTxt;
+                    OnBase.Source = new Bitmap(GetOnBaseGraphic(new Situation()));
+                    Outs.Source = new Bitmap(GetOuts(new Situation()));
                 }
             }
-            GameStatus.FontSize = 60;
             GameStatus.Text = "Final";
         }
 
@@ -207,8 +208,6 @@ namespace AvaloniaScoreDisplay.Scoreboards
             {
                 ChannelBox.IsVisible = true;
                 Channel.Text = game.competitions[0].broadcasts[0].names[0];
-                GameStatus.FontSize = 30;
-                Channel.FontSize = 30;
             }
             //Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
             //Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
@@ -234,7 +233,6 @@ namespace AvaloniaScoreDisplay.Scoreboards
                 OnBase.Source = new Bitmap(GetOnBaseGraphic(situation));
                 Outs.Source = new Bitmap(GetOuts(situation));
             }
-            GameStatus.FontSize = 60;
             vm.Inning = game.competitions[0].status.type.detail;
             GameStatus.Text = "Inning: " + vm.Inning;
         }

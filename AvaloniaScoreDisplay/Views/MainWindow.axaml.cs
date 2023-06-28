@@ -25,7 +25,7 @@ namespace AvaloniaScoreDisplay.Views
         public async Task GetSportsData()
         {
             while (true) {
-                await GetMLBData();
+                await GetMLBData(); 
             }
             //await GetMLBData(); //Dev mode
         }
