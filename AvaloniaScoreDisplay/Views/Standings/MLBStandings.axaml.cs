@@ -4,8 +4,10 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.Models.BaseballGame;
+using AvaloniaScoreDisplay.Models.Standings;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AvaloniaScoreDisplay.Views.Standings
 {
@@ -23,14 +25,14 @@ namespace AvaloniaScoreDisplay.Views.Standings
             };
         }
 
-        public MLBStandings GetMLBStandings(Child1 division)
+        public async Task<MLBStandings> GetMLBStandings(Child1 division)
         {
             try
             {
                 DivStandings.Text = division.shortName;
                 for (int i = 0; i < division.standings.entries.Length; i++)
                 {
-                    var content = new MLBTeamEntry().SetTeamEntry(division.standings.entries[i]);
+                    var content = await new MLBTeamEntry().SetTeamEntry(division.standings.entries[i]);
                     switch (i)
                     {
                         case 0:
@@ -46,6 +48,7 @@ namespace AvaloniaScoreDisplay.Views.Standings
                             FourthTeam.Content = content;
                             break;
                         case 4:
+                            //content.
                             FifthTeam.Content = content;
                             break;
                     }

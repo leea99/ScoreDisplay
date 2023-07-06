@@ -24,8 +24,8 @@
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
 
-          <Viewbox Grid.ColumnSpan="4" HorizontalAlignment="Center" Grid.Row="0">
-            <TextBlock Grid.ColumnSpan="4" Name="DivStandings" HorizontalAlignment="Center" Grid.Row="0" Foreground="White" Text="MLB Scores" FontWeight="Bold"></TextBlock>
+          <Viewbox Grid.ColumnSpan="5" HorizontalAlignment="Center" Grid.Row="0">
+            <TextBlock Grid.ColumnSpan="5" Name="DivStandings" HorizontalAlignment="Center" Grid.Row="0" Foreground="White" Text="" FontWeight="Bold"></TextBlock>
           </Viewbox>
           <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Stretch="None">
             <TextBlock Text="W" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>

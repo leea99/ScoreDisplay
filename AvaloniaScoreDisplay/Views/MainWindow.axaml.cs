@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using AvaloniaScoreDisplay.Models;
+using AvaloniaScoreDisplay.Models.Standings;
 using AvaloniaScoreDisplay.Scoreboards;
 using AvaloniaScoreDisplay.Views.Standings;
 using ExCSS;
@@ -20,18 +21,26 @@ namespace AvaloniaScoreDisplay.Views
         public MainWindow()
         {
             InitializeComponent();
-            WindowState = WindowState.Maximized;
+            #if DEBUG
+                WindowState = WindowState.Maximized;
+            #else
+                WindowState = WindowState.FullScreen;
+            #endif
             XmlConfigurator.Configure();
             GetSportsData();
         }
 
         public async Task GetSportsData()
         {
-            while (true) {
-                //await GetMLBScores();
+            #if DEBUG
+                await GetMLBScores();
                 await GetMLBStandings();
-            }
-            //await GetMLBData(); //Dev mode
+            #else
+                while (true) {
+                    await GetMLBScores();
+                    await GetMLBStandings();
+                }
+            #endif
         }
 
         private string ReplaceURL(string url, string sport, string league)
@@ -104,7 +113,7 @@ namespace AvaloniaScoreDisplay.Views
                                     if (division != null)
                                     {
                                         var graphic = new MLBStandings().GetMLBStandings(division);
-                                        graphics.Add(graphic);
+                                        graphics.Add(await graphic);
                                     }
                                 }
                                 catch (Exception ex)

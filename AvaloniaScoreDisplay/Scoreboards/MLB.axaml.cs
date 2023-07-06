@@ -181,8 +181,6 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     //Info1.Text = winPitcherTxt;
                     //Info2.Text = lossPitcherTxt;
                     //Info3.Text = savePitcherTxt;
-                    OnBase.Source = new Bitmap(GetOnBaseGraphic(new Situation()));
-                    Outs.Source = new Bitmap(GetOuts(new Situation()));
                 }
             }
             GameStatus.Text = "Final";
