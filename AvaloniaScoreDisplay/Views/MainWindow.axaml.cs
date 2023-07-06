@@ -33,7 +33,7 @@ namespace AvaloniaScoreDisplay.Views
         public async Task GetSportsData()
         {
             #if DEBUG
-                await GetMLBScores();
+                //await GetMLBScores();
                 await GetMLBStandings();
             #else
                 while (true) {
@@ -53,11 +53,14 @@ namespace AvaloniaScoreDisplay.Views
         {
             try
             {
+                string? standingsURL = ConfigurationManager.AppSettings["ScoreURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(standingsURLString, "baseball", "mlb");
                 using (var client = new HttpClient())
                 {
-                    var response = await client.GetAsync("http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard");
+                    var response = await client.GetAsync(finalURL);
                     var content = await response.Content.ReadAsStringAsync();
-                    MLBData baseballData = JsonConvert.DeserializeObject<MLBData>(content);
+                    MLBData? baseballData = JsonConvert.DeserializeObject<MLBData>(content);
                     List<MLB> graphics = new List<MLB>();
                     foreach (var game in baseballData.events)
                     {
@@ -92,12 +95,12 @@ namespace AvaloniaScoreDisplay.Views
         {
             try
             {
+                string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(standingsURLString, "baseball", "mlb");
+                finalURL += "?level=" + (int)Statics.StandingLevels.Division;
                 using (var client = new HttpClient())
                 {
-                    string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
-                    string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
-                    var finalURL = ReplaceURL(standingsURLString, "baseball", "mlb");
-                    finalURL += "?level=" + (int)Statics.StandingLevels.Division;
                     var response = await client.GetAsync(finalURL);
                     var content = await response.Content.ReadAsStringAsync();
                     StandingObj? baseballStandings = JsonConvert.DeserializeObject<StandingObj>(content);
