@@ -31,8 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Scoreboards\MLB.axaml.cs">
+    <Compile Update="Views\Scoreboards\MLB.axaml.cs">
       <DependentUpon>MLB.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Scoreboards\SoccerScoreView.axaml.cs">
+      <DependentUpon>SoccerScoreView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

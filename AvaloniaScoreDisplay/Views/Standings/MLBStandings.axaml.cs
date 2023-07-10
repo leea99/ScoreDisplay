@@ -48,7 +48,6 @@ namespace AvaloniaScoreDisplay.Views.Standings
                             FourthTeam.Content = content;
                             break;
                         case 4:
-                            //content.
                             FifthTeam.Content = content;
                             break;
                     }
