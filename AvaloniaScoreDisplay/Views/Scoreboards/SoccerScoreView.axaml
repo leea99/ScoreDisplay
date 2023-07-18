@@ -87,7 +87,9 @@
           </Border>
           <Border BorderBrush="White" Grid.Row="2" Grid.Column="0" BorderThickness="1,0,1,0">
             <Viewbox>
-              <ListBox x:Name="HomeGoals" VerticalAlignment="Center" HorizontalAlignment="Center"  Background="Transparent" Foreground="White">
+              <ListBox x:Name="HomeGoals" VerticalAlignment="Center" HorizontalAlignment="Center"  Background="Transparent" Foreground="White" IsHitTestVisible="False"
+         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemsPanel>
                   <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" />
@@ -97,13 +99,17 @@
             </Viewbox>
           </Border>
           <Border BorderBrush="White" Grid.Row="2" Grid.Column="1" BorderThickness="1,0,1,0">
-            <ListBox x:Name="AwayGoals" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" Foreground="White">
-              <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <StackPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-              </ListBox.ItemsPanel>
-            </ListBox>
+            <Viewbox>
+              <ListBox x:Name="AwayGoals" VerticalAlignment="Center" HorizontalAlignment="Center"  Background="Transparent" Foreground="White" IsHitTestVisible="False"
+         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                  </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+              </ListBox>
+            </Viewbox>
           </Border>
           <Border x:Name="HomeRedsHolder" BorderBrush="White" Grid.Row="3" Grid.Column="0" BorderThickness="1,0,1,1">
             <TextBlock x:Name="HomeReds" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>

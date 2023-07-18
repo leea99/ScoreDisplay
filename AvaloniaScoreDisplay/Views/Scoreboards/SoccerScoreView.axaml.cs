@@ -105,7 +105,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
-                
+                GameStatus.Text = game.status.displayClock.ToString();
             }
         }
         private void GetPreStateAttributes(Event game)
@@ -163,45 +163,44 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             {
                 dynamic dynamicDetail = (dynamic)detail;
                 string type = dynamicDetail.type.text;
+                bool scoringPlay = dynamicDetail.scoringPlay;
                 string displayTime = dynamicDetail.clock.displayValue;
-                switch (type)
+                if (scoringPlay)
                 {
-                    case "Goal":
-                        int playerId = dynamicDetail.athletesInvolved[0].id;
-                        var goalMatch = goalScorers.FirstOrDefault(x => x.PlayerId == playerId);
-                        if (goalMatch == null)
+                    int playerId = dynamicDetail.athletesInvolved[0].id;
+                    var goalMatch = goalScorers.FirstOrDefault(x => x.PlayerId == playerId);
+                    if (goalMatch == null)
+                    {
+                        goalScorers.Add(new SoccerEventViewModel()
                         {
-                            goalScorers.Add(new SoccerEventViewModel()
-                            {
-                                PlayerId = dynamicDetail.athletesInvolved[0].id,
-                                TeamId = dynamicDetail.athletesInvolved[0].team.id,
-                                EventTimes = new List<string> { displayTime },
-                                Name = dynamicDetail.athletesInvolved[0].displayName,
-                            });
-                        }
-                        else if (goalMatch.EventTimes != null)
+                            PlayerId = dynamicDetail.athletesInvolved[0].id,
+                            TeamId = dynamicDetail.athletesInvolved[0].team.id,
+                            EventTimes = new List<string> { displayTime },
+                            Name = dynamicDetail.athletesInvolved[0].displayName,
+                        });
+                    }
+                    else if (goalMatch.EventTimes != null)
+                    {
+                        string time = dynamicDetail.clock.displayValue;
+                        goalMatch.EventTimes.Add(time);
+                    }
+                }
+                else if (type == "Red Card") {
+                    var redCardMatch = redCards.FirstOrDefault(x => x.PlayerId == dynamicDetail.athletesInvolved[0].id);
+                    if (redCardMatch == null)
+                    {
+                        redCards.Add(new SoccerEventViewModel()
                         {
-                            string time = dynamicDetail.clock.displayValue;
-                            goalMatch.EventTimes.Add(time);
-                        }
-                        break;
-                    case "Red Card":
-                        var redCardMatch = redCards.FirstOrDefault(x => x.PlayerId == dynamicDetail.athletesInvolved[0].id);
-                        if (redCardMatch == null)
-                        {
-                            redCards.Add(new SoccerEventViewModel()
-                            {
-                                PlayerId = dynamicDetail.athletesInvolved[0].id,
-                                TeamId = dynamicDetail.athletesInvolved[0].team.id,
-                                EventTimes = new List<string> { displayTime },
-                                Name = dynamicDetail.athletesInvolved[0].displayName,
-                            });
-                        }
-                        else if (redCardMatch.EventTimes != null)
-                        {
-                            redCardMatch.EventTimes.Add(dynamicDetail.clock.displayValue);
-                        }
-                        break;
+                            PlayerId = dynamicDetail.athletesInvolved[0].id,
+                            TeamId = dynamicDetail.athletesInvolved[0].team.id,
+                            EventTimes = new List<string> { displayTime },
+                            Name = dynamicDetail.athletesInvolved[0].displayName,
+                        });
+                    }
+                    else if (redCardMatch.EventTimes != null)
+                    {
+                        redCardMatch.EventTimes.Add(dynamicDetail.clock.displayValue);
+                    }
                 }
             }
             AvaloniaList<object> homeGoals = new AvaloniaList<object>();
@@ -241,7 +240,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     }
                     try
                     {
-                        awayGoals.Add(new ListBoxItem() { Content = goals });
+                        awayGoals.Add(new ListBoxItem() { Content = goals, Foreground = new SolidColorBrush(Colors.White) });
                     }
                     catch (Exception ex)
                     {
@@ -293,11 +292,11 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             }
             else
             {
-                //HomeReds.IsVisible = false;
-                //AwayReds.IsVisible = false;
+                HomeReds.IsVisible = false;
+                AwayReds.IsVisible = false;
             }
-            //HomeReds.Text = homeReds;
-            //AwayReds.Text = awayReds;
+            HomeReds.Text = homeReds;
+            AwayReds.Text = awayReds;
         }
     }
 }
