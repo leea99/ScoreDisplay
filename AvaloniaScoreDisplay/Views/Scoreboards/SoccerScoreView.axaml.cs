@@ -1,5 +1,6 @@
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models.SoccerScores;
@@ -74,7 +75,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                         }
                     }
                     HomeTeamName.Text = home.team.displayName;
-                    HomeTeamRecord.Text = home.records.First().summary;
+                    if (home.records != null && home.records.Length > 0)
+                    {
+                        HomeTeamRecord.Text = home.records.First().summary;
+                    }
                     HomeScore.Text = home.score;
                 }
                 var away = competition.competitors.FirstOrDefault(x => x.homeAway == "away");
@@ -94,9 +98,15 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                         }
                     }
                     AwayTeamName.Text = away.team.displayName;
-                    AwayTeamRecord.Text = away.records.First().summary;
+                    if (away.records != null && away.records.Length > 0)
+                    {
+                        AwayTeamRecord.Text = away.records.First().summary;
+                    }
                     AwayScore.Text = away.score;
                 }
+                var path = Directory.GetCurrentDirectory();
+                path = System.IO.Path.Combine(path, "Images", "Soccer", "soccerball.png");
+                //HomeGoalsImg.Source = new Bitmap(path);
             }
         }
 
@@ -105,6 +115,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
+                GetGameEvents(game);
                 GameStatus.Text = game.status.displayClock.ToString();
             }
         }
@@ -113,8 +124,12 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
+                HomeGoalsHolder.IsVisible = false;
+                AwayGoalsHolder.IsVisible = false;
+                HomeRedsHolder.IsVisible = false;
+                AwayRedsHolder.IsVisible = false;
                 var odds = competition.odds.LastOrDefault();
-                if (odds != null)
+                if (odds != null && odds.homeTeamOdds != null && odds.awayTeamOdds != null)
                 {
                     string homeOdds = odds.homeTeamOdds.moneyLine.ToString();
                     if (!homeOdds.Contains('-'))
