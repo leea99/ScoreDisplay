@@ -1,5 +1,6 @@
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models.SoccerScores;
@@ -74,7 +75,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                         }
                     }
                     HomeTeamName.Text = home.team.displayName;
-                    HomeTeamRecord.Text = home.records.First().summary;
+                    if (home.records != null && home.records.Length > 0)
+                    {
+                        HomeTeamRecord.Text = home.records.First().summary;
+                    }
                     HomeScore.Text = home.score;
                 }
                 var away = competition.competitors.FirstOrDefault(x => x.homeAway == "away");
@@ -94,9 +98,15 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                         }
                     }
                     AwayTeamName.Text = away.team.displayName;
-                    AwayTeamRecord.Text = away.records.First().summary;
+                    if (away.records != null && away.records.Length > 0)
+                    {
+                        AwayTeamRecord.Text = away.records.First().summary;
+                    }
                     AwayScore.Text = away.score;
                 }
+                var path = Directory.GetCurrentDirectory();
+                path = System.IO.Path.Combine(path, "Images", "Soccer", "soccerball.png");
+                //HomeGoalsImg.Source = new Bitmap(path);
             }
         }
 
@@ -105,6 +115,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
+                //GetGameEvents(game);
                 GameStatus.Text = game.status.displayClock.ToString();
             }
         }
@@ -114,7 +125,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             if (competition != null)
             {
                 var odds = competition.odds.LastOrDefault();
-                if (odds != null)
+                if (odds != null && odds.homeTeamOdds != null && odds.awayTeamOdds != null)
                 {
                     string homeOdds = odds.homeTeamOdds.moneyLine.ToString();
                     if (!homeOdds.Contains('-'))
@@ -147,156 +158,9 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
-                GetGameEvents(game);
+                //GetGameEvents(game);
                 GameStatus.Text = competition.status.type.shortDetail;
             }
-        }
-
-        private void GetGameEvents(Event game)
-        {
-            var competition = game.competitions.FirstOrDefault();
-            var home = competition.competitors.FirstOrDefault(x => x.homeAway == "home");
-            var away = competition.competitors.FirstOrDefault(x => x.homeAway == "away");
-            List<SoccerEventViewModel> goalScorers = new List<SoccerEventViewModel>();
-            List<SoccerEventViewModel> redCards = new List<SoccerEventViewModel>();
-            foreach (var detail in competition.details)
-            {
-                dynamic dynamicDetail = (dynamic)detail;
-                string type = dynamicDetail.type.text;
-                bool scoringPlay = dynamicDetail.scoringPlay;
-                string displayTime = dynamicDetail.clock.displayValue;
-                if (scoringPlay)
-                {
-                    int playerId = dynamicDetail.athletesInvolved[0].id;
-                    var goalMatch = goalScorers.FirstOrDefault(x => x.PlayerId == playerId);
-                    if (goalMatch == null)
-                    {
-                        goalScorers.Add(new SoccerEventViewModel()
-                        {
-                            PlayerId = dynamicDetail.athletesInvolved[0].id,
-                            TeamId = dynamicDetail.athletesInvolved[0].team.id,
-                            EventTimes = new List<string> { displayTime },
-                            Name = dynamicDetail.athletesInvolved[0].displayName,
-                        });
-                    }
-                    else if (goalMatch.EventTimes != null)
-                    {
-                        string time = dynamicDetail.clock.displayValue;
-                        goalMatch.EventTimes.Add(time);
-                    }
-                }
-                else if (type == "Red Card") {
-                    var redCardMatch = redCards.FirstOrDefault(x => x.PlayerId == dynamicDetail.athletesInvolved[0].id);
-                    if (redCardMatch == null)
-                    {
-                        redCards.Add(new SoccerEventViewModel()
-                        {
-                            PlayerId = dynamicDetail.athletesInvolved[0].id,
-                            TeamId = dynamicDetail.athletesInvolved[0].team.id,
-                            EventTimes = new List<string> { displayTime },
-                            Name = dynamicDetail.athletesInvolved[0].displayName,
-                        });
-                    }
-                    else if (redCardMatch.EventTimes != null)
-                    {
-                        redCardMatch.EventTimes.Add(dynamicDetail.clock.displayValue);
-                    }
-                }
-            }
-            AvaloniaList<object> homeGoals = new AvaloniaList<object>();
-            AvaloniaList<object> awayGoals = new AvaloniaList<object>();
-            foreach (var scorer in goalScorers)
-            {
-                string goals = "";
-                if (home != null && scorer.TeamId.ToString() == home.id)
-                {
-                    goals += scorer.Name + ":";
-                    if (scorer.EventTimes != null)
-                    {
-                        foreach (var goal in scorer.EventTimes)
-                        {
-                            goals += " " + goal;
-                            if (goal != scorer.EventTimes.LastOrDefault())
-                            {
-                                goals += ',';
-                            }
-                        }
-                    }
-                    homeGoals.Add(new ListBoxItem() { Content = goals });
-                }
-                else
-                {
-                    goals += scorer.Name + ":";
-                    if (scorer.EventTimes != null)
-                    {
-                        foreach (var goal in scorer.EventTimes)
-                        {
-                            goals += " " + goal;
-                            if (goal != scorer.EventTimes.LastOrDefault())
-                            {
-                                goals += ',';
-                            }
-                        }
-                    }
-                    try
-                    {
-                        awayGoals.Add(new ListBoxItem() { Content = goals, Foreground = new SolidColorBrush(Colors.White) });
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
-            HomeGoals.Items = homeGoals;
-            AwayGoals.Items = awayGoals;
-            string homeReds = "";
-            string awayReds = "";
-            if (redCards.Count > 0)
-            {
-                foreach (var player in redCards)
-                {
-                    if (home != null && player.TeamId.ToString() == home.id)
-                    {
-                        homeReds += player.Name + ":";
-                        if (player.EventTimes != null)
-                        {
-                            foreach (var goal in player.EventTimes)
-                            {
-                                homeReds += " " + goal;
-                                if (goal != player.EventTimes.LastOrDefault())
-                                {
-                                    homeReds += ',';
-                                }
-                            }
-                        }
-                        homeReds += '\n';
-                    }
-                    else
-                    {
-                        awayReds += player.Name + ":";
-                        if (player.EventTimes != null)
-                        {
-                            foreach (var goal in player.EventTimes)
-                            {
-                                awayReds += " " + goal;
-                                if (goal != player.EventTimes.LastOrDefault())
-                                {
-                                    awayReds += ',';
-                                }
-                            }
-                        }
-                        awayReds += '\n';
-                    }
-                }
-            }
-            else
-            {
-                HomeReds.IsVisible = false;
-                AwayReds.IsVisible = false;
-            }
-            HomeReds.Text = homeReds;
-            AwayReds.Text = awayReds;
         }
     }
 }
