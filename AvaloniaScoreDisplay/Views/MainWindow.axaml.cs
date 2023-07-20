@@ -1,10 +1,12 @@
 using Avalonia.Controls;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.Models.SoccerScores;
+using AvaloniaScoreDisplay.Models.SoccerStandings;
 using AvaloniaScoreDisplay.Models.Standings;
 using AvaloniaScoreDisplay.Scoreboards;
 using AvaloniaScoreDisplay.Views.Scoreboards;
 using AvaloniaScoreDisplay.Views.Standings;
+using AvaloniaScoreDisplay.Views.Standings.Soccer;
 using DynamicData;
 using ExCSS;
 using log4net;
@@ -52,7 +54,8 @@ namespace AvaloniaScoreDisplay.Views
                                 //await GetMLBStandings();
                                 break;
                             case "soccer":
-                                await GetSoccerScores();
+                                //await GetSoccerScores();
+                                await GetSoccerStandings();
                                 break;
                         }
                     }
@@ -210,6 +213,55 @@ namespace AvaloniaScoreDisplay.Views
             catch (Exception ex)
             {
                 log.Error("Error getting Soccer game data: " + ex.Message);
+            }
+        }
+        private async Task GetSoccerStandings()
+        {
+            try
+            {
+                string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                string? leaguesStr = ConfigurationManager.AppSettings["SoccerLeagues"];
+                if (leaguesStr != null)
+                {
+                    var leagues = leaguesStr.Split(',');
+                    foreach (var league in leagues)
+                    {
+                        var finalURL = ReplaceURL(standingsURLString, "soccer", league);
+                        finalURL += "?level=" + (int)Statics.StandingLevels.Division;
+                        using (var client = new HttpClient())
+                        {
+                            var response = await client.GetAsync(finalURL);
+                            var content = await response.Content.ReadAsStringAsync();
+                            SoccerStandingsMod? soccerStandings = JsonConvert.DeserializeObject<SoccerStandingsMod>(content);
+                            List<SoccerStandings> graphics = new List<SoccerStandings>();
+                            if (soccerStandings != null)
+                            {
+                                foreach (var conference in soccerStandings.children)
+                                {
+                                    if (conference != null && conference.standings != null)
+                                    {
+                                        /*List<List<Models.SoccerStandings.Entry>> teamList = conference.standings.entries
+                                            .Select((item, index) => new { Item = item })*/
+                                    }
+                                }
+                            }
+                            foreach (var g in graphics)
+                            {
+                                try
+                                {
+                                    Content = g;
+                                    await Task.Delay(7000);
+                                }
+                                catch (Exception ex) { }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting MLB game data: " + ex.Message);
             }
         }
 

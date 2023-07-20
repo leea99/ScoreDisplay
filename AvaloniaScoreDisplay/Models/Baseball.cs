@@ -506,7 +506,7 @@ namespace AvaloniaScoreDisplay.Models
         public bool isPremium { get; set; }
     }
 
-    public class Rootobject
+    public class SoccerStandins
     {
         public Situation situation { get; set; }
     }

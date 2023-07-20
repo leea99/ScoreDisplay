@@ -6,7 +6,7 @@
         x:Name="ContentControl"
         >
   <Viewbox Stretch="Uniform">
-    <WrapPanel x:Name="soccerStackPanel" Orientation="Horizontal">
+    <WrapPanel x:Name="mlbStackPanel" Orientation="Horizontal">
       <Grid Width="600" Height="300">
         <Grid.RowDefinitions>
           <RowDefinition Height="*"/>
@@ -18,7 +18,7 @@
             <TextBlock x:Name="LeagueName" HorizontalAlignment="Center" Foreground="White" Text="" FontWeight="Bold"></TextBlock>
           </Viewbox>
         </Grid>
-        <Grid x:Name="ScoreHolder" Grid.Row="1">
+        <Grid Grid.Row="1">
           <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -82,6 +82,46 @@
           </Border>
           <Border BorderBrush="White" Grid.Row="1" Grid.Column="1" BorderThickness="1">
             <TextBlock x:Name="AwayScore" FontSize="80" Foreground="White" Text="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </Border>
+          <Border x:Name="HomeGoalsHolder" BorderBrush="White" Grid.Row="2" Grid.Column="0" BorderThickness="1,0,1,0">
+            <Viewbox>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left">
+						<TextBox Background="Red"></TextBox>
+					</Viewbox>
+					<ListBox x:Name="HomeGoals" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" Foreground="White" IsHitTestVisible="False"
+							 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+						<ListBox.ItemsPanel>
+							<ItemsPanelTemplate>
+								<StackPanel Orientation="Vertical" Grid.Column="1"/>
+							</ItemsPanelTemplate>
+						</ListBox.ItemsPanel>
+					</ListBox>
+				</Grid>
+			</Viewbox>
+          </Border>
+          <Border x:Name="AwayGoalsHolder" BorderBrush="White" Grid.Row="2" Grid.Column="1" BorderThickness="1,0,1,0">
+            <Viewbox>
+              <ListBox x:Name="AwayGoals" VerticalAlignment="Center" HorizontalAlignment="Center"  Background="Transparent" Foreground="White" IsHitTestVisible="False"
+         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                  </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+              </ListBox>
+            </Viewbox>
+          </Border>
+          <Border x:Name="HomeRedsHolder" BorderBrush="White" Grid.Row="3" Grid.Column="0" BorderThickness="1,0,1,1">
+            <TextBlock x:Name="HomeReds" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </Border>
+          <Border x:Name="AwayRedsHolder" BorderBrush="White" Grid.Row="3" Grid.Column="1" BorderThickness="1,0,1,1">
+            <TextBlock x:Name="AwayReds" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           </Border>
         </Grid>
         <Grid Grid.Row="2">
