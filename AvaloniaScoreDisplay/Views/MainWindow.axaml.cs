@@ -4,6 +4,7 @@ using AvaloniaScoreDisplay.Models.SoccerScores;
 using AvaloniaScoreDisplay.Models.SoccerStandings;
 using AvaloniaScoreDisplay.Models.Standings;
 using AvaloniaScoreDisplay.Scoreboards;
+using AvaloniaScoreDisplay.ViewModels;
 using AvaloniaScoreDisplay.Views.Scoreboards;
 using AvaloniaScoreDisplay.Views.Standings;
 using AvaloniaScoreDisplay.Views.Standings.Soccer;
@@ -219,6 +220,7 @@ namespace AvaloniaScoreDisplay.Views
         {
             try
             {
+                const int TeamsOnPage = 5;
                 string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
                 string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
                 string? leaguesStr = ConfigurationManager.AppSettings["SoccerLeagues"];
@@ -228,7 +230,7 @@ namespace AvaloniaScoreDisplay.Views
                     foreach (var league in leagues)
                     {
                         var finalURL = ReplaceURL(standingsURLString, "soccer", league);
-                        finalURL += "?level=" + (int)Statics.StandingLevels.Division;
+                        finalURL += "?level=" + (int)Statics.StandingLevels.Conference;
                         using (var client = new HttpClient())
                         {
                             var response = await client.GetAsync(finalURL);
@@ -239,10 +241,28 @@ namespace AvaloniaScoreDisplay.Views
                             {
                                 foreach (var conference in soccerStandings.children)
                                 {
+                                    int confTotal = 0;
                                     if (conference != null && conference.standings != null)
                                     {
-                                        /*List<List<Models.SoccerStandings.Entry>> teamList = conference.standings.entries
-                                            .Select((item, index) => new { Item = item })*/
+                                        var standingsVM = new SoccerStandingsViewModel(conference.name);
+                                        var entries = conference.standings.entries
+                                                        .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "rank")?.value ?? int.MaxValue)
+                                                        .ToArray();
+                                        List<Models.SoccerStandings.Entry> pageEntries = new List<Models.SoccerStandings.Entry>();
+                                        for (int i = 0; i < entries.Count(); i++)
+                                        {
+                                            if (i > 0 && i % TeamsOnPage == 0)
+                                            {
+                                                standingsVM.Entries = pageEntries;
+                                                var graphic = new SoccerStandings().GetSoccerStandings(standingsVM, i - (TeamsOnPage - 1));
+                                                graphics.Add(await graphic);
+                                                confTotal += pageEntries.Count;
+                                                pageEntries.Clear();
+                                            }
+                                            pageEntries.Add(entries[i]);
+                                        }
+                                        standingsVM.Entries = pageEntries;
+                                        graphics.Add(await new SoccerStandings().GetSoccerStandings(standingsVM, ++confTotal));
                                     }
                                 }
                             }
