@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.Models.SoccerScores;
 using AvaloniaScoreDisplay.Models.SoccerStandings;
@@ -16,15 +18,17 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace AvaloniaScoreDisplay.Views
-{ 
+{
     public partial class MainWindow : Window
     {
+        public static List<string> sports = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(App));
         public MainWindow()
         {
@@ -35,6 +39,13 @@ namespace AvaloniaScoreDisplay.Views
                 WindowState = WindowState.FullScreen;
             #endif
             XmlConfigurator.Configure();
+            var path = Directory.GetCurrentDirectory();
+            path = System.IO.Path.Combine(path, "Images", "background.png");
+            var bitmap = new Bitmap(path);
+            Background = new ImageBrush(bitmap)
+            {
+                Stretch = Stretch.Fill
+            };
             GetSportsData();
         }
 
@@ -43,7 +54,7 @@ namespace AvaloniaScoreDisplay.Views
             string? sportsStr = ConfigurationManager.AppSettings["Sports"];
             if (sportsStr != null)
             {
-                var sports = sportsStr.Split(',');
+                sports = sportsStr.Split(',').ToList();
                 while (true)
                 {
                     foreach (var sport in sports)
@@ -94,6 +105,11 @@ namespace AvaloniaScoreDisplay.Views
                         {
                             log.Error("Game ID: " + game.id + " " + ex.Message);
                         }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("baseball");
+                        return;
                     }
                     foreach (var g in graphics)
                     {
@@ -198,6 +214,11 @@ namespace AvaloniaScoreDisplay.Views
                                     log.Error("Game ID: " + game.id + " " + ex.Message);
                                 }
                             }
+                            if (graphics.Count == 0)
+                            {
+                                sports.Remove("soccer");
+                                return;
+                            }
                             foreach (var g in graphics)
                             {
                                 try
@@ -213,7 +234,7 @@ namespace AvaloniaScoreDisplay.Views
             }
             catch (Exception ex)
             {
-                log.Error("Error getting Soccer game data: " + ex.Message);
+                log.Error("Error getting soccer game data: " + ex.Message);
             }
         }
         private async Task GetSoccerStandings()
@@ -281,7 +302,7 @@ namespace AvaloniaScoreDisplay.Views
             }
             catch (Exception ex)
             {
-                log.Error("Error getting MLB game data: " + ex.Message);
+                log.Error("Error getting soccer standings data: " + ex.Message);
             }
         }
 

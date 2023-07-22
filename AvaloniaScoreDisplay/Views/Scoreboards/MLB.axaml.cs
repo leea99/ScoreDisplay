@@ -20,21 +20,6 @@ namespace AvaloniaScoreDisplay.Scoreboards
         public MLB()
         {
             InitializeComponent();
-            var path = Directory.GetCurrentDirectory();
-            path = System.IO.Path.Combine(path, "Images", "background.png");
-            var bitmap = new Bitmap(path);
-            Background = new ImageBrush(bitmap)
-            {
-                Stretch = Stretch.Fill
-            };
-            if (HomeTeam.Width > AwayTeam.Width)
-            {
-                HomeTeam.Width = AwayTeam.Width;
-            }
-            else
-            {
-                AwayTeam.Width = AwayTeam.Width;
-            }
         }
 
         public async Task<MLB> GetMLBGameScore(Event game)

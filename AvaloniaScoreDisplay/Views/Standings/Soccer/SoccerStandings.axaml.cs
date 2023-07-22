@@ -14,13 +14,6 @@ namespace AvaloniaScoreDisplay.Views.Standings.Soccer
         public SoccerStandings()
         {
             InitializeComponent();
-            var path = Directory.GetCurrentDirectory();
-            path = System.IO.Path.Combine(path, "Images", "background.png");
-            var bitmap = new Bitmap(path);
-            Background = new ImageBrush(bitmap)
-            {
-                Stretch = Stretch.Fill
-            };
         }
 
         public async Task<SoccerStandings> GetSoccerStandings(SoccerStandingsViewModel standings, int startIndex)

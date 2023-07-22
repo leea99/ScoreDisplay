@@ -17,7 +17,7 @@
 					<ColumnDefinition Width="*"></ColumnDefinition>
 					<ColumnDefinition Width="3*"></ColumnDefinition>
 				</Grid.ColumnDefinitions>
-				<TextBlock x:Name="Position" Grid.Row="0" Grid.Column="0" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="Position" Grid.Row="0" Grid.Column="0" FontSize="30" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 				<Image x:Name="TeamLogo" Grid.Row="0" Grid.Column="1" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 			</Grid>
 		</Border>

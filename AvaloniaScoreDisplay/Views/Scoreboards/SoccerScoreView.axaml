@@ -90,9 +90,6 @@
 						<ColumnDefinition Width="*"></ColumnDefinition>
 						<ColumnDefinition Width="*"></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left">
-						<TextBox Background="Red"></TextBox>
-					</Viewbox>
 					<ListBox x:Name="HomeGoals" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" Foreground="White" IsHitTestVisible="False"
 							 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
 						<ListBox.ItemsPanel>
