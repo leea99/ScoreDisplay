@@ -39,14 +39,17 @@ namespace AvaloniaScoreDisplay.Views
                 WindowState = WindowState.FullScreen;
             #endif
             XmlConfigurator.Configure();
-            var path = Directory.GetCurrentDirectory();
-            path = System.IO.Path.Combine(path, "Images", "background.png");
-            var bitmap = new Bitmap(path);
-            Background = new ImageBrush(bitmap)
+            var path = ConfigurationManager.AppSettings["ImagePath"];
+            if (path != null)
             {
-                Stretch = Stretch.Fill
-            };
-            GetSportsData();
+                path = System.IO.Path.Combine(path, "background.png");
+                var bitmap = new Bitmap(path);
+                Background = new ImageBrush(bitmap)
+                {
+                    Stretch = Stretch.Fill
+                };
+                GetSportsData();
+            }
         }
 
         public async Task GetSportsData()
@@ -62,11 +65,11 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sport.ToLower())
                         {
                             case "baseball":
-                                //await GetMLBScores();
-                                //await GetMLBStandings();
+                                await GetMLBScores();
+                                await GetMLBStandings();
                                 break;
                             case "soccer":
-                                //await GetSoccerScores();
+                                await GetSoccerScores();
                                 await GetSoccerStandings();
                                 break;
                         }

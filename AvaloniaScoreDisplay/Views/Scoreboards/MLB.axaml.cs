@@ -10,15 +10,20 @@ using System;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.ViewModels;
 using Avalonia.Media.Imaging;
-
+using System.Configuration;
 
 namespace AvaloniaScoreDisplay.Scoreboards
 {
     public partial class MLB : UserControl
     {
-        public static string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(Directory.GetCurrentDirectory()));
+        public static string path = "";
         public MLB()
         {
+            path = ConfigurationManager.AppSettings["ImagePath"];
+            if (path != null && path != "")
+            {
+                path = Path.Combine(path, "Baseball");
+            }
             InitializeComponent();
         }
 
@@ -267,11 +272,11 @@ namespace AvaloniaScoreDisplay.Scoreboards
             }
             if (fileName == "")
             {
-                return System.IO.Path.Combine(path, "Images", "Baseball", "NoBase.png");
+                return System.IO.Path.Combine(path, "NoBase.png");
             }
             else
             {
-                return System.IO.Path.Combine(path, "Images", "Baseball", fileName + ".png");
+                return System.IO.Path.Combine(path, fileName + ".png");
             }
         }
 
@@ -290,7 +295,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     fileName = 2 + fileName;
                     break;
             }
-            return System.IO.Path.Combine(path, "Images", "Baseball", fileName);
+            return System.IO.Path.Combine(path, fileName);
         }
     }
 }
