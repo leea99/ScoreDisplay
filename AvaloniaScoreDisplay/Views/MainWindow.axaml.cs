@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models;
+using AvaloniaScoreDisplay.Models.FootballScores;
 using AvaloniaScoreDisplay.Models.SoccerScores;
 using AvaloniaScoreDisplay.Models.SoccerStandings;
 using AvaloniaScoreDisplay.Models.Standings;
@@ -65,12 +66,17 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sport.ToLower())
                         {
                             case "baseball":
-                                await GetMLBScores();
-                                await GetMLBStandings();
+                                //await GetMLBScores();
+                                //await GetMLBStandings();
                                 break;
                             case "soccer":
-                                await GetSoccerScores();
-                                await GetSoccerStandings();
+                                //await GetSoccerScores();
+                                //await GetSoccerStandings();
+                                break;
+                            case "college-football":
+                                await GetCFBScores();
+                                break;
+                            case "nfl":
                                 break;
                         }
                     }
@@ -306,6 +312,52 @@ namespace AvaloniaScoreDisplay.Views
             catch (Exception ex)
             {
                 log.Error("Error getting soccer standings data: " + ex.Message);
+            }
+        }
+        private async Task GetCFBScores()
+        {
+            try
+            {
+                string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(scoreURLString, "football", "nfl");
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    FootballScores? footballScores = JsonConvert.DeserializeObject<FootballScores>(content);
+                    /*List<MLB> graphics = new List<MLB>();
+                    foreach (var game in footballScores.events)
+                    {
+                        try
+                        {
+                            var graphic = await new MLB().GetMLBGameScore(game);
+                            graphics.Add(graphic);
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Game ID: " + game.id + " " + ex.Message);
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("baseball");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }*/
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting MLB game data: " + ex.Message);
             }
         }
 
