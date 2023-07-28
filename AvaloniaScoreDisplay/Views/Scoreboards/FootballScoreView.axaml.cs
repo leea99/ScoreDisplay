@@ -33,7 +33,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             }
             else if (game.competitions[0].status.type.state == "post" && game.competitions[0].status.type.completed)
             {
-                //GetFinalStateAttributes(game);
+                GetFinalStateAttributes(game);
             }
             return this;
         }
@@ -64,6 +64,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     {
                         HomeTeamRecord.Text = home.records.First().summary;
                     }
+                    else
+                    {
+                        HomeTeamRecord.Text = "0-0";
+                    }
                     HomeScore.Text = home.score;
                 }
                 var away = competition.competitors.FirstOrDefault(x => x.homeAway == "away");
@@ -86,6 +90,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     if (away.records != null && away.records.Length > 0)
                     {
                         AwayTeamRecord.Text = away.records.First().summary;
+                    }
+                    else
+                    {
+                        AwayTeamRecord.Text = "0-0";
                     }
                     AwayScore.Text = away.score;
                 }
@@ -114,6 +122,15 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                         ChannelBox.IsVisible = true;
                     }
                 }
+            }
+        }
+        private void GetFinalStateAttributes(Event game)
+        {
+            var competition = game.competitions.FirstOrDefault();
+            if (competition != null)
+            {
+                //GetGameEvents(game);
+                GameStatus.Text = competition.status.type.shortDetail;
             }
         }
     }

@@ -321,7 +321,7 @@ namespace AvaloniaScoreDisplay.Views
                 string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
                 string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
                 var finalURL = ReplaceURL(scoreURLString, "football", "nfl");
-                finalURL += "?dates=20230910";
+                finalURL += "?dates=20220925";
                 using (var client = new HttpClient())
                 {
                     var response = await client.GetAsync(finalURL);
