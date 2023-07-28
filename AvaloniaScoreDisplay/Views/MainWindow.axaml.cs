@@ -321,17 +321,18 @@ namespace AvaloniaScoreDisplay.Views
                 string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
                 string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
                 var finalURL = ReplaceURL(scoreURLString, "football", "nfl");
+                finalURL += "?dates=20230910";
                 using (var client = new HttpClient())
                 {
                     var response = await client.GetAsync(finalURL);
                     var content = await response.Content.ReadAsStringAsync();
                     FootballScores? footballScores = JsonConvert.DeserializeObject<FootballScores>(content);
-                    /*List<MLB> graphics = new List<MLB>();
+                    List<FootballScoreView> graphics = new List<FootballScoreView>();
                     foreach (var game in footballScores.events)
                     {
                         try
                         {
-                            var graphic = await new MLB().GetMLBGameScore(game);
+                            var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
                             graphics.Add(graphic);
                         }
                         catch (Exception ex)
@@ -341,7 +342,7 @@ namespace AvaloniaScoreDisplay.Views
                     }
                     if (graphics.Count == 0)
                     {
-                        sports.Remove("baseball");
+                        sports.Remove("college-football");
                         return;
                     }
                     foreach (var g in graphics)
@@ -352,7 +353,7 @@ namespace AvaloniaScoreDisplay.Views
                             await Task.Delay(7000);
                         }
                         catch (Exception ex) { }
-                    }*/
+                    }
                 }
             }
             catch (Exception ex)
