@@ -61,22 +61,21 @@ namespace AvaloniaScoreDisplay.Views
                 sports = sportsStr.Split(',').ToList();
                 while (true)
                 {
-                    foreach (var sport in sports)
+                    for (int i = 0; i < sports.Count; i++)
                     {
-                        switch (sport.ToLower())
+                        switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                //await GetMLBScores();
-                                //await GetMLBStandings();
+                                await GetMLBScores();
                                 break;
                             case "soccer":
-                                //await GetSoccerScores();
-                                //await GetSoccerStandings();
+                                await GetSoccerScores();
                                 break;
                             case "college-football":
                                 await GetCFBScores();
                                 break;
                             case "nfl":
+                                await GetNFLScores();
                                 break;
                         }
                     }
@@ -129,6 +128,7 @@ namespace AvaloniaScoreDisplay.Views
                         }
                         catch (Exception ex) { }
                     }
+                    await GetMLBStandings();
                 }
             }
             catch (Exception ex)
@@ -237,6 +237,7 @@ namespace AvaloniaScoreDisplay.Views
                                 }
                                 catch (Exception ex) { }
                             }
+                            await GetMLBStandings();
                         }
                     }
                 }
@@ -361,13 +362,62 @@ namespace AvaloniaScoreDisplay.Views
                 log.Error("Error getting MLB game data: " + ex.Message);
             }
         }
+        private async Task GetNFLScores()
+        {
+            try
+            {
+                string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(scoreURLString, "football", "nfl");
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    FootballScores? footballScores = JsonConvert.DeserializeObject<FootballScores>(content);
+                    List<FootballScoreView> graphics = new List<FootballScoreView>();
+                    foreach (var game in footballScores.events)
+                    {
+                        try
+                        {
+                            if (ShowGame(game.date, game.status.type))
+                            {
+                                var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
+                                graphics.Add(graphic);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Game ID: " + game.id + " " + ex.Message);
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("nfl");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting MLB game data: " + ex.Message);
+            }
+        }
 
-        private bool ShowGame(string gameDateStr, Models.SoccerScores.Type1 gameState)
+        private bool ShowGame(string gameDateStr, dynamic gameState)
         {
             DateTime queryDate = DateTime.Now;
             DateTime gameDate;
             DateTime.TryParse(gameDateStr, out gameDate);
-            if (queryDate.Date == gameDate.Date || (gameState.state == "post") && (gameState.detail == "FT"))
+            if (queryDate.Date == gameDate.Date || (gameState.state == "post") && (gameState.detail == "FT") && gameDate.AddDays(1) == queryDate.Date)
             {
                 return true;
             }
