@@ -72,7 +72,7 @@ namespace AvaloniaScoreDisplay.Views
                                 await GetSoccerScores();
                                 break;
                             case "college-football":
-                                await GetCFBScores();
+                                //await GetCFBScores();
                                 break;
                             case "nfl":
                                 await GetNFLScores();
@@ -321,8 +321,7 @@ namespace AvaloniaScoreDisplay.Views
             {
                 string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
                 string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
-                var finalURL = ReplaceURL(scoreURLString, "football", "nfl");
-                finalURL += "?dates=20220925";
+                var finalURL = ReplaceURL(scoreURLString, "football", "college-football");
                 using (var client = new HttpClient())
                 {
                     var response = await client.GetAsync(finalURL);
