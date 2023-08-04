@@ -24,13 +24,18 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
     <PackageReference Include="Avalonia.Svg.Skia" Version="0.10.18" />
     <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Scoreboards\MLB.axaml.cs">
+    <Compile Update="Views\Scoreboards\MLB.axaml.cs">
       <DependentUpon>MLB.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Scoreboards\SoccerScoreView.axaml.cs">
+      <DependentUpon>SoccerScoreView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

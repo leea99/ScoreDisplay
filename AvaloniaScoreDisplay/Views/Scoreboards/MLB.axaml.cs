@@ -10,31 +10,21 @@ using System;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.ViewModels;
 using Avalonia.Media.Imaging;
-
+using System.Configuration;
 
 namespace AvaloniaScoreDisplay.Scoreboards
 {
     public partial class MLB : UserControl
     {
-        public static string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(Directory.GetCurrentDirectory()));
+        public static string path = "";
         public MLB()
         {
+            path = ConfigurationManager.AppSettings["ImagePath"];
+            if (path != null && path != "")
+            {
+                path = Path.Combine(path, "Baseball");
+            }
             InitializeComponent();
-            var path = Directory.GetCurrentDirectory();
-            path = System.IO.Path.Combine(path, "Images", "background.png");
-            var bitmap = new Bitmap(path);
-            Background = new ImageBrush(bitmap)
-            {
-                Stretch = Stretch.Fill
-            };
-            if (HomeTeam.Width > AwayTeam.Width)
-            {
-                HomeTeam.Width = AwayTeam.Width;
-            }
-            else
-            {
-                AwayTeam.Width = AwayTeam.Width;
-            }
         }
 
         public async Task<MLB> GetMLBGameScore(Event game)
@@ -154,7 +144,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     {
                         return;
                     }
-                    /*var test = gameLog.boxscore.players;
+                    var test = gameLog.boxscore.players;
                     foreach (var team in test)
                     {
                         var pitchers = team.statistics.FirstOrDefault(x => x.type == "pitching");
@@ -178,12 +168,11 @@ namespace AvaloniaScoreDisplay.Scoreboards
                             }
                         }
                     }
-                    Info1.Text = winPitcherTxt;
-                    Info2.Text = lossPitcherTxt;
-                    Info3.Text = savePitcherTxt;*/
+                    //Info1.Text = winPitcherTxt;
+                    //Info2.Text = lossPitcherTxt;
+                    //Info3.Text = savePitcherTxt;
                 }
             }
-            GameStatus.FontSize = 60;
             GameStatus.Text = "Final";
         }
 
@@ -207,8 +196,6 @@ namespace AvaloniaScoreDisplay.Scoreboards
             {
                 ChannelBox.IsVisible = true;
                 Channel.Text = game.competitions[0].broadcasts[0].names[0];
-                GameStatus.FontSize = 30;
-                Channel.FontSize = 30;
             }
             //Info1.Text = vm.HomeAbr + " SP: " + vm.HomeStarter + vm.HomeStarterStats;
             //Info2.Text = vm.AwayAbr + " SP: " + vm.AwayStarter + vm.AwayStarterStats;
@@ -234,7 +221,6 @@ namespace AvaloniaScoreDisplay.Scoreboards
                 OnBase.Source = new Bitmap(GetOnBaseGraphic(situation));
                 Outs.Source = new Bitmap(GetOuts(situation));
             }
-            GameStatus.FontSize = 60;
             vm.Inning = game.competitions[0].status.type.detail;
             GameStatus.Text = "Inning: " + vm.Inning;
         }
@@ -286,11 +272,11 @@ namespace AvaloniaScoreDisplay.Scoreboards
             }
             if (fileName == "")
             {
-                return System.IO.Path.Combine(path, "Images", "Baseball", "NoBase.png");
+                return System.IO.Path.Combine(path, "NoBase.png");
             }
             else
             {
-                return System.IO.Path.Combine(path, "Images", "Baseball", fileName + ".png");
+                return System.IO.Path.Combine(path, fileName + ".png");
             }
         }
 
@@ -309,7 +295,7 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     fileName = 2 + fileName;
                     break;
             }
-            return System.IO.Path.Combine(path, "Images", "Baseball", fileName);
+            return System.IO.Path.Combine(path, fileName);
         }
     }
 }

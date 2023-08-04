@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="AvaloniaScoreDisplay.Views.Standings.MLBStandings">
+  <Viewbox Stretch="Uniform">
+    <WrapPanel x:Name="mlbStackPanel" Orientation="Horizontal">
+      <Grid Width="600" Height="300">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <Viewbox Grid.ColumnSpan="5" HorizontalAlignment="Center" Grid.Row="0">
+            <TextBlock Grid.ColumnSpan="5" Name="DivStandings" HorizontalAlignment="Center" Grid.Row="0" Foreground="White" Text="" FontWeight="Bold"></TextBlock>
+          </Viewbox>
+          <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Stretch="None">
+            <TextBlock Text="W" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+          </Viewbox>
+          <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Stretch="None">
+            <TextBlock Text="L" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+          </Viewbox>
+          <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" Stretch="None">
+            <TextBlock Text="GB" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+          </Viewbox>
+          <Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" Stretch="None">
+            <TextBlock Text="Playoff %" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+          </Viewbox>
+        </Grid>
+        <Grid Grid.Row="1">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <ContentControl x:Name="FirstTeam" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5"></ContentControl>
+          <ContentControl x:Name="SecondTeam" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5"></ContentControl>
+          <ContentControl x:Name="ThirdTeam" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5"></ContentControl>
+          <ContentControl x:Name="FourthTeam" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5"></ContentControl>
+          <ContentControl x:Name="FifthTeam" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5"></ContentControl>
+        </Grid>
+      </Grid>
+    </WrapPanel>
+  </Viewbox>
+</UserControl>
