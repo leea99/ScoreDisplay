@@ -25,7 +25,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             await GetGeneralInfo(game);
             if (game.competitions[0].status.type.state == "in")
             {
-                //GetInStateAttributes(game);
+                GetInStateAttributes(game);
             }
             else if (game.competitions[0].status.type.state == "pre")
             {
@@ -99,6 +99,18 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 }
             }
         }
+
+        private void GetInStateAttributes(Event game)
+        {
+            var competition = game.competitions.FirstOrDefault();
+            if (competition != null)
+            {
+                GameStatus.Text = competition.status.type.shortDetail;
+                GameStatus.FontSize = 25;
+                Info1.Text = competition.situation.downDistanceText;
+                Info1.FontSize = 25;
+            }
+        }
         private void GetPreStateAttributes(Event game)
         {
             var competition = game.competitions.FirstOrDefault();
@@ -129,8 +141,8 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
-                //GetGameEvents(game);
                 GameStatus.Text = competition.status.type.shortDetail;
+                GameStatus.FontSize = 25;
             }
         }
     }

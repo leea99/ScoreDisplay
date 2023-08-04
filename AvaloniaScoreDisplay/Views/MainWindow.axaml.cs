@@ -372,7 +372,9 @@ namespace AvaloniaScoreDisplay.Views
                 {
                     var response = await client.GetAsync(finalURL);
                     var content = await response.Content.ReadAsStringAsync();
-                    FootballScores? footballScores = JsonConvert.DeserializeObject<FootballScores>(content);
+                    var settings = new JsonSerializerSettings();
+                    settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
+                    FootballScores? footballScores = JsonConvert.DeserializeObject<FootballScores>(content, settings);
                     List<FootballScoreView> graphics = new List<FootballScoreView>();
                     foreach (var game in footballScores.events)
                     {
@@ -407,7 +409,7 @@ namespace AvaloniaScoreDisplay.Views
             }
             catch (Exception ex)
             {
-                log.Error("Error getting MLB game data: " + ex.Message);
+                log.Error("Error getting NFL game data: " + ex.Message);
             }
         }
 

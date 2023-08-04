@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,6 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
     public class FootballScores
     {
         public League[] leagues { get; set; }
-        public string[] groups { get; set; }
         public Season season { get; set; }
         public Week week { get; set; }
         public Event[] events { get; set; }
@@ -33,7 +33,6 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public string uid { get; set; }
         public string name { get; set; }
         public string abbreviation { get; set; }
-        public string midsizeName { get; set; }
         public string slug { get; set; }
         public Season1 season { get; set; }
         public Logo[] logos { get; set; }
@@ -100,7 +99,8 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public Season2 season { get; set; }
         public Week1 week { get; set; }
         public Competition[] competitions { get; set; }
-        public Link2[] links { get; set; }
+        public Link3[] links { get; set; }
+        public Weather weather { get; set; }
         public Status status { get; set; }
     }
 
@@ -116,9 +116,29 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public int number { get; set; }
     }
 
+    public class Weather
+    {
+        public string displayValue { get; set; }
+        public int temperature { get; set; }
+        public int highTemperature { get; set; }
+        public string conditionId { get; set; }
+        public Link link { get; set; }
+    }
+
+    public class Link
+    {
+        public string language { get; set; }
+        public string[] rel { get; set; }
+        public string href { get; set; }
+        public string text { get; set; }
+        public string shortText { get; set; }
+        public bool isExternal { get; set; }
+        public bool isPremium { get; set; }
+    }
+
     public class Status
     {
-        public double clock { get; set; }
+        public float clock { get; set; }
         public string displayClock { get; set; }
         public int period { get; set; }
         public Type1 type { get; set; }
@@ -150,14 +170,14 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public Venue venue { get; set; }
         public Competitor[] competitors { get; set; }
         public Note[] notes { get; set; }
+        public Situation situation { get; set; }
         public Status1 status { get; set; }
         public Broadcast[] broadcasts { get; set; }
+        public Leader[] leaders { get; set; }
         public Format format { get; set; }
-        public Ticket[] tickets { get; set; }
         public string startDate { get; set; }
-        public Geobroadcast[] geoBroadcasts { get; set; }
         public Odd[] odds { get; set; }
-        public Groups groups { get; set; }
+        public Geobroadcast[] geoBroadcasts { get; set; }
     }
 
     public class Type2
@@ -181,15 +201,98 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public string state { get; set; }
     }
 
-    public class Status1
+    public class Situation
     {
-        public double clock { get; set; }
-        public string displayClock { get; set; }
-        public int period { get; set; }
+        public Lastplay lastPlay { get; set; }
+        public int down { get; set; }
+        public int yardLine { get; set; }
+        public int distance { get; set; }
+        public string downDistanceText { get; set; }
+        public string shortDownDistanceText { get; set; }
+        public string possessionText { get; set; }
+        public bool isRedZone { get; set; }
+        public int homeTimeouts { get; set; }
+        public int awayTimeouts { get; set; }
+        public string possession { get; set; }
+    }
+
+    public class Lastplay
+    {
+        public string id { get; set; }
         public Type3 type { get; set; }
+        public string text { get; set; }
+        public int scoreValue { get; set; }
+        public Team team { get; set; }
+        public Probability probability { get; set; }
+        public Drive drive { get; set; }
+        public Start1 start { get; set; }
+        public End end { get; set; }
+        public int statYardage { get; set; }
     }
 
     public class Type3
+    {
+        public string id { get; set; }
+        public string text { get; set; }
+        public string abbreviation { get; set; }
+    }
+
+    public class Team
+    {
+        public string id { get; set; }
+    }
+
+    public class Probability
+    {
+        public float tiePercentage { get; set; }
+        public float homeWinPercentage { get; set; }
+        public float awayWinPercentage { get; set; }
+        public int secondsLeft { get; set; }
+    }
+
+    public class Drive
+    {
+        public string description { get; set; }
+        public Start start { get; set; }
+        public Timeelapsed timeElapsed { get; set; }
+    }
+
+    public class Start
+    {
+        public int yardLine { get; set; }
+        public string text { get; set; }
+    }
+
+    public class Timeelapsed
+    {
+        public string displayValue { get; set; }
+    }
+
+    public class Start1
+    {
+        public int yardLine { get; set; }
+    }
+
+    public class End
+    {
+        public int yardLine { get; set; }
+        public Team1 team { get; set; }
+    }
+
+    public class Team1
+    {
+        public string id { get; set; }
+    }
+
+    public class Status1
+    {
+        public float clock { get; set; }
+        public string displayClock { get; set; }
+        public int period { get; set; }
+        public Type4 type { get; set; }
+    }
+
+    public class Type4
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -210,14 +313,6 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public int periods { get; set; }
     }
 
-    public class Groups
-    {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string shortName { get; set; }
-        public bool isConference { get; set; }
-    }
-
     public class Competitor
     {
         public string id { get; set; }
@@ -225,14 +320,14 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public string type { get; set; }
         public int order { get; set; }
         public string homeAway { get; set; }
-        public Team team { get; set; }
+        public Team2 team { get; set; }
         public string score { get; set; }
-        public Curatedrank curatedRank { get; set; }
+        public Linescore[] linescores { get; set; }
         public object[] statistics { get; set; }
         public Record[] records { get; set; }
     }
 
-    public class Team
+    public class Team2
     {
         public string id { get; set; }
         public string uid { get; set; }
@@ -245,9 +340,8 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public string alternateColor { get; set; }
         public bool isActive { get; set; }
         public Venue1 venue { get; set; }
-        public Link[] links { get; set; }
+        public Link1[] links { get; set; }
         public string logo { get; set; }
-        public string conferenceId { get; set; }
     }
 
     public class Venue1
@@ -255,7 +349,7 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public string id { get; set; }
     }
 
-    public class Link
+    public class Link1
     {
         public string[] rel { get; set; }
         public string href { get; set; }
@@ -264,9 +358,9 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public bool isPremium { get; set; }
     }
 
-    public class Curatedrank
+    public class Linescore
     {
-        public int current { get; set; }
+        public double value { get; set; }
     }
 
     public class Record
@@ -289,44 +383,46 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public string[] names { get; set; }
     }
 
-    public class Ticket
+    public class Leader
     {
-        public string summary { get; set; }
-        public int numberAvailable { get; set; }
-        public Link1[] links { get; set; }
+        public string name { get; set; }
+        public string displayName { get; set; }
+        public string shortDisplayName { get; set; }
+        public string abbreviation { get; set; }
+        public Leader1[] leaders { get; set; }
     }
 
-    public class Link1
+    public class Leader1
     {
-        public string href { get; set; }
+        public string displayValue { get; set; }
+        public float value { get; set; }
+        public Athlete athlete { get; set; }
+        public Team4 team { get; set; }
     }
 
-    public class Geobroadcast
-    {
-        public Type4 type { get; set; }
-        public Market market { get; set; }
-        public Media media { get; set; }
-        public string lang { get; set; }
-        public string region { get; set; }
-    }
-
-    public class Type4
+    public class Athlete
     {
         public string id { get; set; }
+        public string fullName { get; set; }
+        public string displayName { get; set; }
         public string shortName { get; set; }
+        public Link2[] links { get; set; }
+        public string headshot { get; set; }
+        public string jersey { get; set; }
+        public Position position { get; set; }
+        public Team3 team { get; set; }
+        public bool active { get; set; }
     }
 
-    public class Market
+    public class Position
+    {
+        public string abbreviation { get; set; }
+    }
+
+    public class Team3
     {
         public string id { get; set; }
-        public string type { get; set; }
     }
-
-    public class Media
-    {
-        public string shortName { get; set; }
-    }
-
     public class Odd
     {
         public Provider provider { get; set; }
@@ -343,6 +439,43 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
 
     public class Link2
     {
+        public string[] rel { get; set; }
+        public string href { get; set; }
+    }
+
+    public class Team4
+    {
+        public string id { get; set; }
+    }
+
+    public class Geobroadcast
+    {
+        public Type5 type { get; set; }
+        public Market market { get; set; }
+        public Media media { get; set; }
+        public string lang { get; set; }
+        public string region { get; set; }
+    }
+
+    public class Type5
+    {
+        public string id { get; set; }
+        public string shortName { get; set; }
+    }
+
+    public class Market
+    {
+        public string id { get; set; }
+        public string type { get; set; }
+    }
+
+    public class Media
+    {
+        public string shortName { get; set; }
+    }
+
+    public class Link3
+    {
         public string language { get; set; }
         public string[] rel { get; set; }
         public string href { get; set; }
@@ -351,4 +484,5 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public bool isExternal { get; set; }
         public bool isPremium { get; set; }
     }
+
 }
