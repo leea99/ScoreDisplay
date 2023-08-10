@@ -10,6 +10,7 @@ using AvaloniaScoreDisplay.Scoreboards;
 using AvaloniaScoreDisplay.ViewModels;
 using AvaloniaScoreDisplay.Views.Scoreboards;
 using AvaloniaScoreDisplay.Views.Standings;
+using AvaloniaScoreDisplay.Views.Standings.NFL;
 using AvaloniaScoreDisplay.Views.Standings.Soccer;
 using DynamicData;
 using ExCSS;
@@ -66,16 +67,17 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                await GetMLBScores();
+                                //await GetMLBScores();
                                 break;
                             case "soccer":
-                                await GetSoccerScores();
+                                //await GetSoccerScores();
                                 break;
                             case "college-football":
                                 //await GetCFBScores();
                                 break;
                             case "nfl":
                                 await GetNFLScores();
+                                await GetNFLStandings();
                                 break;
                         }
                     }
@@ -237,7 +239,7 @@ namespace AvaloniaScoreDisplay.Views
                                 }
                                 catch (Exception ex) { }
                             }
-                            await GetMLBStandings();
+                            await GetSoccerStandings();
                         }
                     }
                 }
@@ -406,10 +408,62 @@ namespace AvaloniaScoreDisplay.Views
                         catch (Exception ex) { }
                     }
                 }
+                await GetNFLStandings();
             }
             catch (Exception ex)
             {
                 log.Error("Error getting NFL game data: " + ex.Message);
+            }
+        }
+        private async Task GetNFLStandings()
+        {
+            try
+            {
+                string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(standingsURLString, "football", "nfl");
+                finalURL += "?level=" + (int)Statics.StandingLevels.Division;
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    StandingObj? nflStandings = JsonConvert.DeserializeObject<StandingObj>(content);
+                    List<NFLStandings> graphics = new List<NFLStandings>();
+                    if (nflStandings != null)
+                    {
+                        foreach (var league in nflStandings.children)
+                        {
+                            foreach (var division in league.children)
+                            {
+                                try
+                                {
+                                    if (division != null)
+                                    {
+                                        var graphic = new NFLStandings().GetNFLStandings(division);
+                                        graphics.Add(await graphic);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error("Game ID: " + division.id + " " + ex.Message);
+                                }
+                            }
+                        }
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NFL standing data: " + ex.Message);
             }
         }
 
