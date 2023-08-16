@@ -1,0 +1,18 @@
+{
+   "Leagues": {
+       "ncaa": {
+           "194": false,
+           "2633": true,
+           "277": false,
+           "201": true,
+           "251": true,
+           "2440": true,
+           "333": true,
+           "228": true,
+       },
+       "nfl": {
+       },
+       "mlb": {
+       }
+   }
+}
