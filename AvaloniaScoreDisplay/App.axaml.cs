@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.ViewModels;
 using AvaloniaScoreDisplay.Views;
 using log4net;
@@ -20,6 +21,7 @@ namespace AvaloniaScoreDisplay
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                Statics.ReadLogoMappings();
                 desktop.MainWindow = new MainWindow
                 {
                     DataContext = new MainWindowViewModel(),

@@ -146,11 +146,14 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
-                var odds = competition.odds.LastOrDefault();
-                if (odds != null && odds.details != null)
+                if (competition.odds != null)
                 {
-                    Info1.Text = odds.details;
-                    Info2.Text = "O/U: " + odds.overUnder.ToString();
+                    var odds = competition.odds.LastOrDefault();
+                    if (odds != null && odds.details != null)
+                    {
+                        Info1.Text = odds.details;
+                        Info2.Text = "O/U: " + odds.overUnder.ToString();
+                    }
                 }
                 DateTime startDate = new DateTime();
                 DateTime.TryParse(competition.startDate, out startDate);
