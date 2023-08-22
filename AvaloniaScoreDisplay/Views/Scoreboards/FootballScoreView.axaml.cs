@@ -1,7 +1,9 @@
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models.FootballScores;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -22,7 +24,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             {
                 LeagueName.Text = league.name + " Scores";
             }
-            await GetGeneralInfo(game);
+            await GetGeneralInfo(game, league);
             if (game.competitions[0].status.type.state == "in")
             {
                 GetInStateAttributes(game);
@@ -38,7 +40,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             return this;
         }
 
-        private async Task GetGeneralInfo(Event game)
+        private async Task GetGeneralInfo(Event game, League? league)
         {
             var competition = game.competitions.First();
             if (competition != null)
@@ -46,10 +48,19 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 var home = competition.competitors.FirstOrDefault(x => x.homeAway == "home");
                 if (home != null)
                 {
-                    if (home.team.logo != null && home.team.logo != "")
+                    string? homeLogo = null;
+                    if (league != null && league.abbreviation == "NFL")
+                    {
+                        homeLogo = Models.Statics.GetDarkTeamLogo("nfl", home.team.abbreviation, home.team.color);
+                    }
+                    else if (league != null && league.abbreviation == "NCAAF")
+                    {
+                        homeLogo = Models.Statics.GetDarkTeamLogo("ncaa", home.team.id, home.team.color);
+                    }
+                    if (homeLogo != null)
                     {
                         using (var httpClient = new HttpClient())
-                        using (var response = await httpClient.GetAsync(home.team.logo))
+                        using (var response = await httpClient.GetAsync(homeLogo))
                         using (var stream = await response.Content.ReadAsStreamAsync())
                         {
                             var memoryStream = new MemoryStream();
@@ -59,7 +70,12 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                             HomeTeam.Source = bitmap;
                         }
                     }
-                    HomeTeamName.Text = home.team.displayName;
+                    Color parsedColor = Color.Parse('#' + home.team.color);
+                    Color homeColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
+                    HomeLogoBack.Background = new SolidColorBrush(homeColor);
+                    HomeTeamBack.Background = new SolidColorBrush(homeColor);
+                    HomeRecordBack.Background = new SolidColorBrush(homeColor);
+                    HomeTeamName.Text = home.team.abbreviation;
                     if (home.records != null && home.records.Length > 0)
                     {
                         HomeTeamRecord.Text = home.records.First().summary;
@@ -73,10 +89,19 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 var away = competition.competitors.FirstOrDefault(x => x.homeAway == "away");
                 if (away != null)
                 {
-                    if (away.team.logo != null && away.team.logo != "")
+                    string? awayLogo = null;
+                    if (league != null && league.abbreviation == "NFL")
+                    {
+                        awayLogo = Models.Statics.GetDarkTeamLogo("nfl", away.team.abbreviation, away.team.color);
+                    }
+                    else if (league != null && league.abbreviation == "NCAAF")
+                    {
+                        awayLogo = Models.Statics.GetDarkTeamLogo("ncaa", away.team.id, away.team.color);
+                    }
+                    if (awayLogo != null)
                     {
                         using (var httpClient = new HttpClient())
-                        using (var response = await httpClient.GetAsync(away.team.logo))
+                        using (var response = await httpClient.GetAsync(awayLogo))
                         using (var stream = await response.Content.ReadAsStreamAsync())
                         {
                             var memoryStream = new MemoryStream();
@@ -86,7 +111,12 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                             AwayTeam.Source = bitmap;
                         }
                     }
-                    AwayTeamName.Text = away.team.displayName;
+                    Color parsedColor = Color.Parse('#' + away.team.color);
+                    Color awayColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
+                    AwayLogoBack.Background = new SolidColorBrush(awayColor);
+                    AwayTeamBack.Background = new SolidColorBrush(awayColor);
+                    AwayRecordBack.Background = new SolidColorBrush(awayColor);
+                    AwayTeamName.Text = away.team.abbreviation;
                     if (away.records != null && away.records.Length > 0)
                     {
                         AwayTeamRecord.Text = away.records.First().summary;
@@ -116,11 +146,14 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             var competition = game.competitions.FirstOrDefault();
             if (competition != null)
             {
-                var odds = competition.odds.LastOrDefault();
-                if (odds != null && odds.details != null)
+                if (competition.odds != null)
                 {
-                    Info1.Text = odds.details;
-                    Info2.Text = "O/U: " + odds.overUnder.ToString();
+                    var odds = competition.odds.LastOrDefault();
+                    if (odds != null && odds.details != null)
+                    {
+                        Info1.Text = odds.details;
+                        Info2.Text = "O/U: " + odds.overUnder.ToString();
+                    }
                 }
                 DateTime startDate = new DateTime();
                 DateTime.TryParse(competition.startDate, out startDate);

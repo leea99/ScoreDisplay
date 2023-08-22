@@ -1,0 +1,34 @@
+{
+  "ncaa": {
+    "194": true,
+    "2633": true,
+    "277": false,
+    "201": true,
+    "251": true,
+    "2440": true,
+    "333": true,
+    "228": true,
+    "153": true,
+    "2483": true,
+    "264": true,
+    "2306": true,
+    "127": true,
+    "2117": true,
+    "158": true,
+    "77": true,
+    "164": true,
+    "2623": true,
+    "331":  true
+  },
+  "nfl": {
+    "NYG": true,
+    "CAR": true,
+    "DET": true
+  },
+  "mlb": {
+    "LAD": true,
+    "SD": true,
+    "MIN": true,
+    "TB": true
+  }
+}

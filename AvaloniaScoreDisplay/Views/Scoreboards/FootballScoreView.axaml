@@ -36,19 +36,19 @@
               <RowDefinition Height="*"></RowDefinition>
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Border BorderBrush="White" BorderThickness="1,1,0,0" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+            <Border x:Name="HomeLogoBack" BorderBrush="White" BorderThickness="1,1,0,0" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
               <Viewbox Stretch="Uniform">
                 <Image x:Name="HomeTeam" MinHeight="350" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
               </Viewbox>
             </Border>
-            <Border BorderBrush="White" BorderThickness="1,1,1,0" Grid.Row="0" Grid.Column="1" Padding="0 0 0 0">
+            <Border x:Name="HomeTeamBack" BorderBrush="White" BorderThickness="0,1,1,0" Grid.Row="0" Grid.Column="1" Padding="0 0 0 0">
               <Viewbox Stretch="None">
-                <TextBlock x:Name="HomeTeamName" FontWeight="Bold" Foreground="White" Grid.Row="1" Grid.Column="0" TextAlignment="Center"/>
+                <TextBlock x:Name="HomeTeamName" FontWeight="Bold" Foreground="White" Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontSize="35"/>
               </Viewbox>
             </Border>
-            <Border BorderBrush="White" BorderThickness="1,0,1,1" Grid.Row="1" Grid.Column="1">
+            <Border x:Name="HomeRecordBack" BorderBrush="White" BorderThickness="0,0,1,0" Grid.Row="1" Grid.Column="1">
               <Viewbox Stretch="None">
-                <TextBlock x:Name="HomeTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center"/>
+                <TextBlock x:Name="HomeTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontSize="40"/>
               </Viewbox>
             </Border>
           </Grid>
@@ -61,19 +61,19 @@
               <RowDefinition Height="*"></RowDefinition>
               <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Border BorderBrush="White" BorderThickness="1,1,0,0" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+            <Border x:Name="AwayLogoBack" BorderBrush="White" BorderThickness="1,1,0,0" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
               <Viewbox Stretch="Uniform">
                 <Image x:Name="AwayTeam" MinHeight="350" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
               </Viewbox>
             </Border>
-            <Border BorderBrush="White" BorderThickness="1,1,1,0" Grid.Row="0" Grid.Column="1" Padding="0 0 0 0">
+            <Border x:Name="AwayTeamBack" BorderBrush="White" BorderThickness="0,1,1,0" Grid.Row="0" Grid.Column="1" Padding="0 0 0 0">
               <Viewbox Stretch="None">
-                <TextBlock x:Name="AwayTeamName" FontWeight="Bold" Foreground="White" Grid.Row="1" Grid.Column="0" TextAlignment="Center"/>
+                <TextBlock x:Name="AwayTeamName" FontWeight="Bold" Foreground="White" Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontSize="35"/>
               </Viewbox>
             </Border>
-            <Border BorderBrush="White" BorderThickness="1,0,1,1" Grid.Row="1" Grid.Column="1">
+            <Border x:Name="AwayRecordBack" BorderBrush="White" BorderThickness="0,0,1,0" Grid.Row="1" Grid.Column="1">
               <Viewbox Stretch="None">
-                <TextBlock x:Name="AwayTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center"/>
+                <TextBlock x:Name="AwayTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontSize="40"/>
               </Viewbox>
             </Border>
           </Grid>
