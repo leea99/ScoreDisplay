@@ -14,6 +14,7 @@ using AvaloniaScoreDisplay.Views.Standings.NFL;
 using AvaloniaScoreDisplay.Views.Standings.Soccer;
 using DynamicData;
 using ExCSS;
+using JetBrains.Annotations;
 using log4net;
 using log4net.Config;
 using Newtonsoft.Json;
@@ -33,6 +34,7 @@ namespace AvaloniaScoreDisplay.Views
     {
         public static List<string> sports = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(App));
+        public static Queue<ContentControl> scoreContent = new Queue<ContentControl>();
         public MainWindow()
         {
             InitializeComponent();
@@ -51,38 +53,61 @@ namespace AvaloniaScoreDisplay.Views
                 {
                     Stretch = Stretch.Fill
                 };
-                GetSportsData();
+                ChangeContent();
+                //GetSportsData();
             }
         }
-
-        public async Task GetSportsData()
+        private async Task ChangeContent()
         {
             string? sportsStr = ConfigurationManager.AppSettings["Sports"];
             if (sportsStr != null)
             {
+                int sportNum = 0;
                 sports = sportsStr.Split(',').ToList();
+                await GetSportsData(sports[sportNum++]);
                 while (true)
                 {
-                    for (int i = 0; i < sports.Count; i++)
+                    if (scoreContent.Count < 2)
                     {
-                        switch (sports[i].ToLower())
-                        {
-                            case "baseball":
-                                //await GetMLBScores();
-                                break;
-                            case "soccer":
-                                //await GetSoccerScores();
-                                break;
-                            case "college-football":
-                                await GetCFBScores();
-                                break;
-                            case "nfl":
-                                await GetNFLScores();
-                                await GetNFLStandings();
-                                break;
-                        }
+                        GetSportsData(sports[sportNum++]);
                     }
+                    if (scoreContent.Count > 0)
+                    {
+                        Content = scoreContent.Dequeue();
+                    }
+                    await Task.Delay(ReturnDelayTime());
                 }
+            }
+        }
+        public async Task GetSportsData(string sport)
+        {
+            for (int i = 0; i < sports.Count; i++)
+            {
+                switch (sport.ToLower())
+                {
+                    case "baseball":
+                        await GetMLBScores();
+                        break;
+                    case "soccer":
+                        //await GetSoccerScores();
+                        break;
+                    case "college-football":
+                        //await GetCFBScores();
+                        break;
+                    case "nfl":
+                        //await GetNFLScores();
+                        //await GetNFLStandings();
+                        break;
+                }
+            }
+        }
+
+        private async Task<string> GetEspnData(string url)
+        {
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(url);
+                return await response.Content.ReadAsStringAsync();
             }
         }
 
@@ -126,8 +151,7 @@ namespace AvaloniaScoreDisplay.Views
                     {
                         try
                         {
-                            Content = g;
-                            await Task.Delay(7000);
+                            scoreContent.Enqueue(g);
                         }
                         catch (Exception ex) { }
                     }
@@ -179,8 +203,7 @@ namespace AvaloniaScoreDisplay.Views
                     {
                         try
                         {
-                            Content = g;
-                            await Task.Delay(7000);
+                            scoreContent.Enqueue(g);
                         }
                         catch (Exception ex) { }
                     }
@@ -236,7 +259,7 @@ namespace AvaloniaScoreDisplay.Views
                                 try
                                 {
                                     Content = g;
-                                    await Task.Delay(7000);
+                                    await Task.Delay(ReturnDelayTime());
                                 }
                                 catch (Exception ex) { }
                             }
@@ -305,7 +328,7 @@ namespace AvaloniaScoreDisplay.Views
                                 try
                                 {
                                     Content = g;
-                                    await Task.Delay(7000);
+                                    await Task.Delay(ReturnDelayTime());
                                 }
                                 catch (Exception ex) { }
                             }
@@ -371,7 +394,7 @@ namespace AvaloniaScoreDisplay.Views
                         try
                         {
                             Content = g;
-                            await Task.Delay(7000);
+                            await Task.Delay(ReturnDelayTime());
                         }
                         catch (Exception ex) { }
                     }
@@ -424,7 +447,7 @@ namespace AvaloniaScoreDisplay.Views
                         try
                         {
                             Content = g;
-                            await Task.Delay(7000);
+                            await Task.Delay(ReturnDelayTime());
                         }
                         catch (Exception ex) { }
                     }
@@ -476,7 +499,7 @@ namespace AvaloniaScoreDisplay.Views
                         try
                         {
                             Content = g;
-                            await Task.Delay(7000);
+                            await Task.Delay(ReturnDelayTime());
                         }
                         catch (Exception ex) { }
                     }
@@ -498,6 +521,19 @@ namespace AvaloniaScoreDisplay.Views
                 return true;
             }
             return false;
+        }
+
+        private int ReturnDelayTime()
+        {
+            string? delayTime = ConfigurationManager.AppSettings["DelayTime"];
+            if (!string.IsNullOrEmpty(delayTime))
+            {
+                if (int.TryParse(delayTime, out int delayValue))
+                {
+                    return delayValue;
+                }
+            }
+            return 7000;
         }
     }
 }
