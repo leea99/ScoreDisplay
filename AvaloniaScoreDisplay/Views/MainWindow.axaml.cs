@@ -69,6 +69,10 @@ namespace AvaloniaScoreDisplay.Views
                 {
                     if (scoreContent.Count < 2)
                     {
+                        if (sportNum >= sports.Count())
+                        {
+                            sportNum = 0;
+                        }
                         GetSportsData(sports[sportNum++]);
                     }
                     if (scoreContent.Count > 0)
@@ -81,24 +85,21 @@ namespace AvaloniaScoreDisplay.Views
         }
         public async Task GetSportsData(string sport)
         {
-            for (int i = 0; i < sports.Count; i++)
+            switch (sport.ToLower())
             {
-                switch (sport.ToLower())
-                {
-                    case "baseball":
-                        await GetMLBScores();
-                        break;
-                    case "soccer":
-                        //await GetSoccerScores();
-                        break;
-                    case "college-football":
-                        //await GetCFBScores();
-                        break;
-                    case "nfl":
-                        //await GetNFLScores();
-                        //await GetNFLStandings();
-                        break;
-                }
+                case "baseball":
+                    await GetMLBScores();
+                    break;
+                case "soccer":
+                    //await GetSoccerScores();
+                    break;
+                case "college-football":
+                    //await GetCFBScores();
+                    break;
+                case "nfl":
+                    //await GetNFLScores();
+                    //await GetNFLStandings();
+                    break;
             }
         }
 
