@@ -31,7 +31,7 @@ namespace AvaloniaScoreDisplay.Views.Standings.NFL
             Wins.Text = team.stats.FirstOrDefault(x => x.abbreviation == "W")?.displayValue ?? "0";
             Loses.Text = team.stats.FirstOrDefault(x => x.abbreviation == "L")?.displayValue ?? "0";
             Ties.Text = team.stats.FirstOrDefault(x => x.abbreviation == "T")?.displayValue ?? "0";
-            Pct.Text = team.stats.FirstOrDefault(x => x.abbreviation == "POFF")?.displayValue ?? "0";
+            DivRec.Text = team.stats.FirstOrDefault(x => x.displayName == "DIV")?.displayValue ?? "0";
             return this;
         }
     }

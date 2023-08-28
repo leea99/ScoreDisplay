@@ -371,7 +371,7 @@ namespace AvaloniaScoreDisplay.Views
                             {
                                 try
                                 {
-                                    if (!finalGameIds.Contains(game.id)/* && ShowGame(game.date, game.status.type)*/)
+                                    if (!finalGameIds.Contains(game.id) && ShowGame(game.date, game.status.type))
                                     {
                                         var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
                                         finalGraphics.Add(graphic);
@@ -425,13 +425,11 @@ namespace AvaloniaScoreDisplay.Views
                     {
                         try
                         {
-                            /*if (ShowGame(game.date, game.status.type))
+                            if (ShowGame(game.date, game.status.type))
                             {
                                 var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
                                 graphics.Add(graphic);
-                            }*/
-                            var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
-                            graphics.Add(graphic);
+                            }
                         }
                         catch (Exception ex)
                         {

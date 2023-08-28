@@ -51,8 +51,8 @@ namespace AvaloniaScoreDisplay.Scoreboards
         {
             vm.HomeAbr = game.competitions[0].competitors[0].team.abbreviation;
             vm.AwayAbr = game.competitions[0].competitors[1].team.abbreviation;
-            vm.HomeLogo = game.competitions[0].competitors[0].team.logo;
-            vm.AwayLogo = game.competitions[0].competitors[1].team.logo;
+            vm.HomeLogo = Models.Statics.GetDarkTeamLogo("mlb", game.competitions[0].competitors[0].team.abbreviation, game.competitions[0].competitors[0].team.color, game.competitions[0].competitors[0].team.logo);
+            vm.AwayLogo = Models.Statics.GetDarkTeamLogo("mlb", game.competitions[0].competitors[1].team.abbreviation, game.competitions[0].competitors[1].team.color, game.competitions[0].competitors[1].team.logo);
             vm.HomeName = game.competitions[0].competitors[0].team.name;
             vm.HomeRecord = game.competitions[0].competitors[0].records[0].summary;
             vm.AwayName = game.competitions[0].competitors[1].team.name;
@@ -75,6 +75,11 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     var bitmap = new Bitmap(memoryStream);
                     HomeTeam.Source = bitmap;
                 }
+                Color parsedColor = Color.Parse('#' + game.competitions[0].competitors[0].team.color);
+                Color homeColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
+                homeLogo.Background = new SolidColorBrush(homeColor);
+                homeName.Background = new SolidColorBrush(homeColor);
+                homeRecord.Background = new SolidColorBrush(homeColor);
                 using (var httpClient = new HttpClient())
                 using (var response = await httpClient.GetAsync(vm.AwayLogo))
                 using (var stream = await response.Content.ReadAsStreamAsync())
@@ -85,6 +90,11 @@ namespace AvaloniaScoreDisplay.Scoreboards
                     var bitmap = new Bitmap(memoryStream);
                     AwayTeam.Source = bitmap;
                 }
+                parsedColor = Color.Parse('#' + game.competitions[0].competitors[1].team.color);
+                Color awayColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
+                awayLogo.Background = new SolidColorBrush(awayColor);
+                awayName.Background = new SolidColorBrush(awayColor);
+                awayRecord.Background = new SolidColorBrush(awayColor);
             }
             catch (Exception e)
             {
