@@ -323,6 +323,7 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public Team2 team { get; set; }
         public string score { get; set; }
         public Linescore[] linescores { get; set; }
+        public CuratedRank curatedRank { get; set; }
         public object[] statistics { get; set; }
         public Record[] records { get; set; }
     }
@@ -484,5 +485,8 @@ namespace AvaloniaScoreDisplay.Models.FootballScores
         public bool isExternal { get; set; }
         public bool isPremium { get; set; }
     }
-
+    public class CuratedRank
+    {
+        public int current { get; set; }
+    }
 }

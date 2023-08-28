@@ -76,6 +76,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     HomeTeamBack.Background = new SolidColorBrush(homeColor);
                     HomeRecordBack.Background = new SolidColorBrush(homeColor);
                     HomeTeamName.Text = home.team.abbreviation;
+                    if (home.curatedRank != null && home.curatedRank.current <= 25)
+                    {
+                        HomeTeamName.Text = "#" + home.curatedRank.current + " " + HomeTeamName.Text;
+                    }
                     if (home.records != null && home.records.Length > 0)
                     {
                         HomeTeamRecord.Text = home.records.First().summary;
