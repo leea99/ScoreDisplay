@@ -68,17 +68,17 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                //await GetMLBScores();
+                                await GetMLBScores();
                                 break;
                             case "soccer":
                                 //await GetSoccerScores();
                                 break;
                             case "college-football":
-                                await GetCFBScores();
+                                //await GetCFBScores();
                                 break;
                             case "nfl":
-                                await GetNFLScores();
-                                await GetNFLStandings();
+                                //await GetNFLScores();
+                                //await GetNFLStandings();
                                 break;
                         }
                     }
@@ -164,6 +164,11 @@ namespace AvaloniaScoreDisplay.Views
                                 {
                                     if (division != null)
                                     {
+                                        division.standings.entries = division.standings.entries
+                                            .Where(entry => entry.stats.Any(stat => stat.abbreviation == "SEED"))
+                                            .OrderBy(entry => entry.stats.FirstOrDefault(stat => stat.abbreviation == "SEED")?.value)
+                                            .ToArray();
+
                                         var graphic = new MLBStandings().GetMLBStandings(division);
                                         graphics.Add(await graphic);
                                     }
