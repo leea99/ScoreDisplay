@@ -74,9 +74,16 @@ namespace AvaloniaScoreDisplay.Models
             }
         }
 
-        public static string? GetDarkTeamLogo(string league, string abbreviation, string hexColor)
+        public static string? GetDarkTeamLogo(string league, string abbreviation, string hexColor, string? logo = null)
         {
-            string? logo = ConfigurationManager.AppSettings["TeamLogoURL"];
+            if (logo == null)
+            {
+                logo = ConfigurationManager.AppSettings["TeamLogoURL"];
+            }
+            else if (!logo.Contains("-dark"))
+            {
+                logo = logo.Replace("500", "500-dark");
+            }
             if (logo != null)
             {
                 logo = logo.Replace("LEAGUE", league);

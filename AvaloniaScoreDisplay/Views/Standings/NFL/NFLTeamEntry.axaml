@@ -24,7 +24,7 @@
 			<TextBlock x:Name="Ties" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		</Border>
 		<Border BorderBrush="White" Grid.Row="0" Grid.Column="4" BorderThickness="1" Margin="0,0,0,0">
-			<TextBlock x:Name="Pct" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<TextBlock x:Name="DivRec" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		</Border>
 	</Grid>
 </UserControl>

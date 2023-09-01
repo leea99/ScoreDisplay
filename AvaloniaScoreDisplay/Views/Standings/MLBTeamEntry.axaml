@@ -11,7 +11,7 @@
       <ColumnDefinition Width="*"></ColumnDefinition>
       <ColumnDefinition Width="*"></ColumnDefinition>
     </Grid.ColumnDefinitions>
-    <Border BorderBrush="White" Grid.Row="0" Grid.Column="0" BorderThickness="1" Margin="0,0,0,0">
+    <Border x:Name="LogoBack" BorderBrush="White" Grid.Row="0" Grid.Column="0" BorderThickness="1" Margin="0,0,0,0">
       <Image x:Name="TeamLogo" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Border>
     <Border BorderBrush="White" Grid.Row="0" Grid.Column="1" BorderThickness="1" Margin="0,0,0,0">

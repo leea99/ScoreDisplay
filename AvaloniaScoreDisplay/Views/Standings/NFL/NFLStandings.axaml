@@ -37,7 +37,7 @@
 						<TextBlock Text="T" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
 					</Viewbox>
 					<Viewbox VerticalAlignment="Top" Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" Stretch="None">
-						<TextBlock Text="Playoff %" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
+						<TextBlock Text="Div Record" FontWeight="Bold" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Center"/>
 					</Viewbox>
 				</Grid>
 				<Grid Grid.Row="1">
