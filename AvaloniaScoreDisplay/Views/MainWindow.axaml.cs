@@ -74,11 +74,11 @@ namespace AvaloniaScoreDisplay.Views
                                 await GetSoccerScores();
                                 break;
                             case "college-football":
-                                //await GetCFBScores();
+                                await GetCFBScores();
                                 break;
                             case "nfl":
-                                //await GetNFLScores();
-                                //await GetNFLStandings();
+                                await GetNFLScores();
+                                await GetNFLStandings();
                                 break;
                         }
                     }

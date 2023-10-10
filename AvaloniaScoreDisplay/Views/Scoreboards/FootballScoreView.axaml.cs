@@ -121,6 +121,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     AwayTeamBack.Background = new SolidColorBrush(awayColor);
                     AwayRecordBack.Background = new SolidColorBrush(awayColor);
                     AwayTeamName.Text = away.team.abbreviation;
+                    if (away.curatedRank != null && away.curatedRank.current <= 25)
+                    {
+                        AwayTeamName.Text = "#" + away.curatedRank.current + " " + AwayTeamName.Text;
+                    }
                     if (away.records != null && away.records.Length > 0)
                     {
                         AwayTeamRecord.Text = away.records.First().summary;
