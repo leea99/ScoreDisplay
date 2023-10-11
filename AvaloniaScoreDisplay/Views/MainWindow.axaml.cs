@@ -508,15 +508,15 @@ namespace AvaloniaScoreDisplay.Views
                     var settings = new JsonSerializerSettings();
                     settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
                     HockeyScores? hockeyScores = JsonConvert.DeserializeObject<HockeyScores>(content, settings);
-                    List<FootballScoreView> graphics = new List<FootballScoreView>();
+                    List<Scoreboard> graphics = new List<Scoreboard>();
                     foreach (var game in hockeyScores.events)
                     {
                         try
                         {
                             if (ShowGame(game.date, game.status.type))
                             {
-                                //var graphic = await new FootballScoreView().GetFootballScore(game, hockeyScores.leagues.FirstOrDefault());
-                                //graphics.Add(graphic);
+                                var graphic = await new Scoreboard().GetHockeyScore(hockeyScores.leagues.FirstOrDefault().name, hockeyScores.leagues.FirstOrDefault().abbreviation, game);
+                                graphics.Add(graphic);
                             }
                         }
                         catch (Exception ex)
@@ -533,6 +533,8 @@ namespace AvaloniaScoreDisplay.Views
                     {
                         try
                         {
+                            Content = g;
+                            await Task.Delay(7000);
                         }
                         catch (Exception ex) { }
                     }

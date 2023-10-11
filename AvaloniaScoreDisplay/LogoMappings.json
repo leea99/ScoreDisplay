@@ -29,6 +29,10 @@
     "KC": true,
     "STL": true,
     "OAK": true,
-    "PHI":  true
+    "PHI": true
+  },
+  "nhl": {
+    "TOR": true,
+    "CGY": true
   }
 }

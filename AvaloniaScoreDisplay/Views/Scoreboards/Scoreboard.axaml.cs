@@ -7,6 +7,9 @@ using System;
 using AvaloniaScoreDisplay.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Avalonia.Media.Imaging;
+using AvaloniaScoreDisplay.Models.HockeyScores;
+using System.Linq;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace AvaloniaScoreDisplay.Views.Scoreboards
 {
@@ -15,6 +18,73 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
         public Scoreboard()
         {
             InitializeComponent();
+        }
+
+        public async Task<Scoreboard> GetHockeyScore(string league, string leagueAbbr, Event game)
+        {
+            if (game.competitions[0] != null)
+            {
+                var homeTeam = GetTeamDetails(game.competitions[0].competitors.FirstOrDefault(x => x.homeAway == "home"));
+                var awayTeam = GetTeamDetails(game.competitions[0].competitors.FirstOrDefault(x => x.homeAway == "away"));
+
+                var gameData = new ScoreViewModel()
+                {
+                    LeagueName = league,
+                    LeagueAbbr = leagueAbbr,
+                    HomeTeam = homeTeam,
+                    AwayTeam = awayTeam,
+                    GameStatus = game.competitions[0].status.type.ToString() ?? "",
+                    IsComplete = game.competitions[0].status.type.completed,
+                };
+                if (game.competitions[0].broadcasts != null && game.competitions[0].broadcasts.FirstOrDefault() != null)
+                {
+                    var broadcast = game.competitions[0].broadcasts.FirstOrDefault();
+                    if (broadcast != null)
+                    {
+                        gameData.Channel = broadcast.names.FirstOrDefault() ?? "";
+                    }
+                }
+                if (gameData.GameStatus == "pre")
+                {
+                    if (game.competitions[0].odds.FirstOrDefault() != null )
+                    {
+                        gameData.Info1 = game.competitions[0].odds.FirstOrDefault()?.details ?? "";
+                        gameData.Info2 = game.competitions[0].odds.FirstOrDefault()?.overUnder.ToString() ?? "";
+                    }
+                }
+                return await GetScoreDetails(gameData);
+            }
+            return new Scoreboard();
+        }
+
+        private TeamViewModel GetTeamDetails(dynamic? team)
+        {
+            if (team != null)
+            {
+                var teamVM = new TeamViewModel()
+                {
+                    Id = team.id,
+                    Abbreviation = team.team.abbreviation,
+                    Color = team.team.color,
+                    Name = team.team.name,
+                    Logo = team.team.logo,
+                    Score = team.score,
+                    Record = team.records[0].summary
+                };
+                try
+                {
+                    teamVM.Rank = team.curatedRank.current;
+                }
+                catch (RuntimeBinderException)
+                {
+                    //  MyProperty doesn't exist
+                }
+                return teamVM;
+            }
+            else
+            {
+                return new TeamViewModel();
+            }
         }
 
         public async Task<Scoreboard> GetScoreDetails(ScoreViewModel gameData)
@@ -44,14 +114,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             if (gameData.HomeTeam != null)
             {
                 string? homeLogo = null;
-                if (gameData.LeagueAbbr == "NFL")
-                {
-                    homeLogo = Models.Statics.GetDarkTeamLogo("nfl", gameData.HomeTeam.Id, gameData.HomeTeam.Color);
-                }
-                else if (gameData.LeagueAbbr == "NCAAF")
-                {
-                    homeLogo = Models.Statics.GetDarkTeamLogo("ncaa", gameData.HomeTeam.Id, gameData.HomeTeam.Color);
-                }
+                homeLogo = Models.Statics.GetDarkTeamLogo("nhl", gameData.HomeTeam.Abbreviation, gameData.HomeTeam.Color);
                 if (homeLogo != null)
                 {
                     using (var httpClient = new HttpClient())
@@ -88,14 +151,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             if (gameData.AwayTeam != null)
             {
                 string? AwayLogo = null;
-                if (gameData.LeagueAbbr == "NFL")
-                {
-                    AwayLogo = Models.Statics.GetDarkTeamLogo("nfl", gameData.AwayTeam.Id, gameData.AwayTeam.Color);
-                }
-                else if (gameData.LeagueAbbr == "NCAAF")
-                {
-                    AwayLogo = Models.Statics.GetDarkTeamLogo("ncaa", gameData.AwayTeam.Id, gameData.AwayTeam.Color);
-                }
+                AwayLogo = Models.Statics.GetDarkTeamLogo("nhl", gameData.AwayTeam.Abbreviation, gameData.AwayTeam.Color);
                 if (AwayLogo != null)
                 {
                     using (var httpClient = new HttpClient())
