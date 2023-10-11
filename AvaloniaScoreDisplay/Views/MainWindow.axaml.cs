@@ -5,6 +5,7 @@ using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.Models.FootballScores;
 using AvaloniaScoreDisplay.Models.SoccerScores;
 using AvaloniaScoreDisplay.Models.SoccerStandings;
+using AvaloniaScoreDisplay.Models.HockeyScores;
 using AvaloniaScoreDisplay.Models.Standings;
 using AvaloniaScoreDisplay.Scoreboards;
 using AvaloniaScoreDisplay.ViewModels;
@@ -68,17 +69,20 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                await GetMLBScores();
+                                //await GetMLBScores();
                                 break;
                             case "soccer":
-                                await GetSoccerScores();
+                                //await GetSoccerScores();
                                 break;
                             case "college-football":
-                                await GetCFBScores();
+                                //await GetCFBScores();
                                 break;
                             case "nfl":
-                                await GetNFLScores();
-                                await GetNFLStandings();
+                                //await GetNFLScores();
+                                //await GetNFLStandings();
+                                break;
+                            case "hockey":
+                                await GetNHLScores();
                                 break;
                         }
                     }
@@ -488,6 +492,55 @@ namespace AvaloniaScoreDisplay.Views
             catch (Exception ex)
             {
                 log.Error("Error getting NFL standing data: " + ex.Message);
+            }
+        }
+        private async Task GetNHLScores()
+        {
+            try
+            {
+                string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(scoreURLString, "hockey", "nhl");
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var settings = new JsonSerializerSettings();
+                    settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
+                    HockeyScores? hockeyScores = JsonConvert.DeserializeObject<HockeyScores>(content, settings);
+                    List<FootballScoreView> graphics = new List<FootballScoreView>();
+                    foreach (var game in hockeyScores.events)
+                    {
+                        try
+                        {
+                            if (ShowGame(game.date, game.status.type))
+                            {
+                                //var graphic = await new FootballScoreView().GetFootballScore(game, hockeyScores.leagues.FirstOrDefault());
+                                //graphics.Add(graphic);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Game ID: " + game.id + " " + ex.Message);
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("hockey");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NFL game data: " + ex.Message);
             }
         }
 
