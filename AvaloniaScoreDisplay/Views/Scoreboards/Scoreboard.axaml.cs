@@ -33,7 +33,8 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     LeagueAbbr = leagueAbbr,
                     HomeTeam = homeTeam,
                     AwayTeam = awayTeam,
-                    GameStatus = game.competitions[0].status.type.ToString() ?? "",
+                    GameState = game.competitions[0].status.type.state ?? "",
+                    GameStatus = game.competitions[0].status.type.shortDetail ?? "",
                     IsComplete = game.competitions[0].status.type.completed,
                 };
                 if (game.competitions[0].broadcasts != null && game.competitions[0].broadcasts.FirstOrDefault() != null)
@@ -44,12 +45,12 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                         gameData.Channel = broadcast.names.FirstOrDefault() ?? "";
                     }
                 }
-                if (gameData.GameStatus == "pre")
+                if (gameData.GameState == "pre")
                 {
                     if (game.competitions[0].odds.FirstOrDefault() != null )
                     {
                         gameData.Info1 = game.competitions[0].odds.FirstOrDefault()?.details ?? "";
-                        gameData.Info2 = game.competitions[0].odds.FirstOrDefault()?.overUnder.ToString() ?? "";
+                        gameData.Info2 = "O/U: " + game.competitions[0].odds.FirstOrDefault()?.overUnder.ToString() ?? "";
                     }
                 }
                 return await GetScoreDetails(gameData);
@@ -94,15 +95,15 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 LeagueName.Text = gameData.LeagueName + " Scores";
             }
             await GetGeneralInfo(gameData);
-            if (gameData.GameStatus == "in")
+            if (gameData.GameState == "in")
             {
                 GetInStateAttributes(gameData);
             }
-            else if (gameData.GameStatus == "pre")
+            else if (gameData.GameState == "pre")
             {
                 GetPreStateAttributes(gameData);
             }
-            else if (gameData.GameStatus == "post" && gameData.IsComplete)
+            else if (gameData.GameState == "post" && gameData.IsComplete)
             {
                 GetFinalStateAttributes(gameData);
             }

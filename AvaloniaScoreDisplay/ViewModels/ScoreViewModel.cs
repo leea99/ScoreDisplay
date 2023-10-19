@@ -15,6 +15,7 @@ namespace AvaloniaScoreDisplay.ViewModels
         public TeamViewModel? AwayTeam { get; set; }
         public string Info1 { get; set; } = string.Empty;
         public string Info2 { get; set; } = string.Empty;
+        public string GameState { get; set; } = string.Empty;
         public string GameStatus { get; set; } = string.Empty;
         public string Channel { get; set; } = string.Empty;
         public bool IsComplete { get; set; } = false;

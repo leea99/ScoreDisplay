@@ -37,5 +37,8 @@
     <Compile Update="Views\Scoreboards\SoccerScoreView.axaml.cs">
       <DependentUpon>SoccerScoreView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Standings\Hockey\HockeyTeamEntry.axaml.cs">
+      <DependentUpon>HockeyTeamEntry.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

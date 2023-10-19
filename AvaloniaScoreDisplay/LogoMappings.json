@@ -33,6 +33,7 @@
   },
   "nhl": {
     "TOR": true,
-    "CGY": true
+    "CGY": true,
+    "TB":  true
   }
 }

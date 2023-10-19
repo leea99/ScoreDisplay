@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using AvaloniaScoreDisplay.Views.Standings.Hockey;
 
 namespace AvaloniaScoreDisplay.Views
 {
@@ -69,16 +70,16 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                //await GetMLBScores();
+                                await GetMLBScores();
                                 break;
                             case "soccer":
-                                //await GetSoccerScores();
+                                await GetSoccerScores();
                                 break;
                             case "college-football":
-                                //await GetCFBScores();
+                                await GetCFBScores();
                                 break;
                             case "nfl":
-                                //await GetNFLScores();
+                                await GetNFLScores();
                                 //await GetNFLStandings();
                                 break;
                             case "hockey":
@@ -538,11 +539,82 @@ namespace AvaloniaScoreDisplay.Views
                         }
                         catch (Exception ex) { }
                     }
+                    await GetNHLStandings();
                 }
             }
             catch (Exception ex)
             {
-                log.Error("Error getting NFL game data: " + ex.Message);
+                log.Error("Error getting NHL game data: " + ex.Message);
+            }
+        }
+        private async Task GetNHLStandings()
+        {
+            try
+            {
+                const int TeamsOnPage = 4;
+                string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(standingsURLString, "hockey", "nhl");
+                finalURL += "?level=" + (int)Statics.StandingLevels.Division;
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    StandingObj? hockeyStandings = JsonConvert.DeserializeObject<StandingObj>(content);
+                    List<HockeyStandings> graphics = new List<HockeyStandings>();
+                    if (hockeyStandings != null)
+                    {
+                        foreach (var league in hockeyStandings.children)
+                        {
+                            foreach (var division in league.children)
+                            {
+                                try
+                                {
+                                    int divTotal = 0;
+                                    if (division != null)
+                                    {
+                                        var standingsVM = new StandingsViewModel(division.name);
+                                        var entries = division.standings.entries
+                                                        .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "rank")?.value ?? int.MaxValue)
+                                                        .ToArray();
+                                        List<Models.Standings.Entry> pageEntries = new List<Models.Standings.Entry>();
+                                        for (int i = 0; i < division.standings.entries.Count(); i++)
+                                        {
+                                            if (i > 0 && i % TeamsOnPage == 0)
+                                            {
+                                                standingsVM.Entries = pageEntries;
+                                                var graphic = new HockeyStandings().GetHockeyStandings(standingsVM, i - (TeamsOnPage - 1));
+                                                graphics.Add(await graphic);
+                                                divTotal += pageEntries.Count;
+                                                pageEntries.Clear();
+                                            }
+                                            pageEntries.Add(entries[i]);
+                                        }
+                                        standingsVM.Entries = pageEntries;
+                                        graphics.Add(await new HockeyStandings().GetHockeyStandings(standingsVM, ++divTotal));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error("Game ID: " + division.id + " " + ex.Message);
+                                }
+                            }
+                        }
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NHL standing data: " + ex.Message);
             }
         }
 
