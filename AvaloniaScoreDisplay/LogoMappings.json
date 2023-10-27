@@ -34,6 +34,10 @@
   "nhl": {
     "TOR": true,
     "CGY": true,
-    "TB":  true
+    "TB": true
+  },
+  "nba": {
+    "TOR": true,
+    "OKC":  true
   }
 }

@@ -28,6 +28,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AvaloniaScoreDisplay.Views.Standings.Hockey;
+using AvaloniaScoreDisplay.Models.BasketballScore;
 
 namespace AvaloniaScoreDisplay.Views
 {
@@ -70,20 +71,23 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                await GetMLBScores();
+                                //await GetMLBScores();
                                 break;
                             case "soccer":
-                                await GetSoccerScores();
+                                //await GetSoccerScores();
                                 break;
                             case "college-football":
-                                await GetCFBScores();
+                                //await GetCFBScores();
                                 break;
                             case "nfl":
-                                await GetNFLScores();
+                                //await GetNFLScores();
                                 //await GetNFLStandings();
                                 break;
                             case "hockey":
-                                await GetNHLScores();
+                                //await GetNHLScores();
+                                break;
+                            case "basketball":
+                                await GetNBAScores();
                                 break;
                         }
                     }
@@ -615,6 +619,58 @@ namespace AvaloniaScoreDisplay.Views
             catch (Exception ex)
             {
                 log.Error("Error getting NHL standing data: " + ex.Message);
+            }
+        }
+        private async Task GetNBAScores()
+        {
+            try
+            {
+                string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(scoreURLString, "basketball", "nba");
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var settings = new JsonSerializerSettings();
+                    settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
+                    BasketballScore? basketballScores = JsonConvert.DeserializeObject<BasketballScore>(content, settings);
+                    List<Scoreboard> graphics = new List<Scoreboard>();
+                    foreach (var game in basketballScores.events)
+                    {
+                        try
+                        {
+                            if (ShowGame(game.date, game.status.type))
+                            {
+                                var graphic = await new Scoreboard().GetBasketballScore(basketballScores.leagues.FirstOrDefault().name, basketballScores.leagues.FirstOrDefault().abbreviation, game);
+                                graphics.Add(graphic);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Game ID: " + game.id + " " + ex.Message);
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("basketball");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                    //await GetNHLStandings();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NBA game data: " + ex.Message);
             }
         }
 

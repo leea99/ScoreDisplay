@@ -53,7 +53,44 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                         gameData.Info2 = "O/U: " + game.competitions[0].odds.FirstOrDefault()?.overUnder.ToString() ?? "";
                     }
                 }
-                return await GetScoreDetails(gameData);
+                return await GetScoreDetails(gameData, leagueAbbr);
+            }
+            return new Scoreboard();
+        }
+        public async Task<Scoreboard> GetBasketballScore(string league, string leagueAbbr, Models.BasketballScore.Event game)
+        {
+            if (game.competitions[0] != null)
+            {
+                var homeTeam = GetTeamDetails(game.competitions[0].competitors.FirstOrDefault(x => x.homeAway == "home"));
+                var awayTeam = GetTeamDetails(game.competitions[0].competitors.FirstOrDefault(x => x.homeAway == "away"));
+
+                var gameData = new ScoreViewModel()
+                {
+                    LeagueName = league,
+                    LeagueAbbr = leagueAbbr,
+                    HomeTeam = homeTeam,
+                    AwayTeam = awayTeam,
+                    GameState = game.competitions[0].status.type.state ?? "",
+                    GameStatus = game.competitions[0].status.type.shortDetail ?? "",
+                    IsComplete = game.competitions[0].status.type.completed,
+                };
+                if (game.competitions[0].broadcasts != null && game.competitions[0].broadcasts.FirstOrDefault() != null)
+                {
+                    var broadcast = game.competitions[0].broadcasts.FirstOrDefault();
+                    if (broadcast != null)
+                    {
+                        gameData.Channel = broadcast.names.FirstOrDefault() ?? "";
+                    }
+                }
+                if (gameData.GameState == "pre")
+                {
+                    if (game.competitions[0].odds.FirstOrDefault() != null)
+                    {
+                        gameData.Info1 = game.competitions[0].odds.FirstOrDefault()?.details ?? "";
+                        gameData.Info2 = "O/U: " + game.competitions[0].odds.FirstOrDefault()?.overUnder.ToString() ?? "";
+                    }
+                }
+                return await GetScoreDetails(gameData, leagueAbbr);
             }
             return new Scoreboard();
         }
@@ -88,13 +125,13 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             }
         }
 
-        public async Task<Scoreboard> GetScoreDetails(ScoreViewModel gameData)
+        public async Task<Scoreboard> GetScoreDetails(ScoreViewModel gameData, string leagueAbbr)
         {
             if (gameData.LeagueName != null)
             {
                 LeagueName.Text = gameData.LeagueName + " Scores";
             }
-            await GetGeneralInfo(gameData);
+            await GetGeneralInfo(gameData, leagueAbbr);
             if (gameData.GameState == "in")
             {
                 GetInStateAttributes(gameData);
@@ -110,12 +147,12 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             return this;
         }
 
-        private async Task GetGeneralInfo(ScoreViewModel gameData)
+        private async Task GetGeneralInfo(ScoreViewModel gameData, string leagueAbbr)
         {
             if (gameData.HomeTeam != null)
             {
                 string? homeLogo = null;
-                homeLogo = Models.Statics.GetDarkTeamLogo("nhl", gameData.HomeTeam.Abbreviation, gameData.HomeTeam.Color);
+                homeLogo = Models.Statics.GetDarkTeamLogo(leagueAbbr, gameData.HomeTeam.Abbreviation, gameData.HomeTeam.Color);
                 if (homeLogo != null)
                 {
                     using (var httpClient = new HttpClient())
@@ -152,7 +189,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             if (gameData.AwayTeam != null)
             {
                 string? AwayLogo = null;
-                AwayLogo = Models.Statics.GetDarkTeamLogo("nhl", gameData.AwayTeam.Abbreviation, gameData.AwayTeam.Color);
+                AwayLogo = Models.Statics.GetDarkTeamLogo(leagueAbbr, gameData.AwayTeam.Abbreviation, gameData.AwayTeam.Color);
                 if (AwayLogo != null)
                 {
                     using (var httpClient = new HttpClient())

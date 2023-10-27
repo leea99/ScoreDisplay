@@ -109,6 +109,7 @@ namespace AvaloniaScoreDisplay.Models
 
         private static bool? CheckLogoMappings(string league, string abbreviation)
         {
+            league = league.ToLower();
             if (logoMappings.ContainsKey(league))
             {
                 var leagueMappings = logoMappings[league];
