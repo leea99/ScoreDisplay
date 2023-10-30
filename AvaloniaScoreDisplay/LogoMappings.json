@@ -38,6 +38,9 @@
   },
   "nba": {
     "TOR": true,
-    "OKC":  true
+    "OKC": true,
+    "PHI": true,
+    "HOU": true,
+    "BOS":  true
   }
 }

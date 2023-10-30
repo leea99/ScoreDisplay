@@ -1,4 +1,4 @@
-﻿using AvaloniaScoreDisplay.Models.SoccerStandings;
+﻿using AvaloniaScoreDisplay.Models.ConfStandings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

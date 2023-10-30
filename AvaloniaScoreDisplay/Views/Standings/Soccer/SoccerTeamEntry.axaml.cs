@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
-using AvaloniaScoreDisplay.Models.SoccerStandings;
+using AvaloniaScoreDisplay.Models.ConfStandings;
 using System.IO;
 using System.Linq;
 using System.Net.Http;

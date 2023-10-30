@@ -4,7 +4,7 @@ using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.Models.FootballScores;
 using AvaloniaScoreDisplay.Models.SoccerScores;
-using AvaloniaScoreDisplay.Models.SoccerStandings;
+using AvaloniaScoreDisplay.Models.ConfStandings;
 using AvaloniaScoreDisplay.Models.HockeyScores;
 using AvaloniaScoreDisplay.Models.Standings;
 using AvaloniaScoreDisplay.Scoreboards;
@@ -29,6 +29,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AvaloniaScoreDisplay.Views.Standings.Hockey;
 using AvaloniaScoreDisplay.Models.BasketballScore;
+using AvaloniaScoreDisplay.Views.Standings.Basketball;
 
 namespace AvaloniaScoreDisplay.Views
 {
@@ -71,23 +72,25 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                //await GetMLBScores();
+                                await GetMLBScores();
                                 break;
                             case "soccer":
-                                //await GetSoccerScores();
+                                await GetSoccerScores();
                                 break;
                             case "college-football":
-                                //await GetCFBScores();
+                                await GetCFBScores();
                                 break;
                             case "nfl":
-                                //await GetNFLScores();
+                                await GetNFLScores();
                                 //await GetNFLStandings();
                                 break;
                             case "hockey":
-                                //await GetNHLScores();
+                                await GetNHLScores();
+                                //await GetNHLStandings();
                                 break;
                             case "basketball":
                                 await GetNBAScores();
+                                //await GetNBAStandings();
                                 break;
                         }
                     }
@@ -296,7 +299,7 @@ namespace AvaloniaScoreDisplay.Views
                                         var entries = conference.standings.entries
                                                         .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "rank")?.value ?? int.MaxValue)
                                                         .ToArray();
-                                        List<Models.SoccerStandings.Entry> pageEntries = new List<Models.SoccerStandings.Entry>();
+                                        List<Models.ConfStandings.Entry> pageEntries = new List<Models.ConfStandings.Entry>();
                                         for (int i = 0; i < entries.Count(); i++)
                                         {
                                             if (i > 0 && i % TeamsOnPage == 0)
@@ -582,7 +585,7 @@ namespace AvaloniaScoreDisplay.Views
                                                         .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "rank")?.value ?? int.MaxValue)
                                                         .ToArray();
                                         List<Models.Standings.Entry> pageEntries = new List<Models.Standings.Entry>();
-                                        for (int i = 0; i < division.standings.entries.Count(); i++)
+                                        for (int i = 0; i < entries.Count(); i++)
                                         {
                                             if (i > 0 && i % TeamsOnPage == 0)
                                             {
@@ -665,12 +668,83 @@ namespace AvaloniaScoreDisplay.Views
                         }
                         catch (Exception ex) { }
                     }
-                    //await GetNHLStandings();
+                    await GetNBAStandings();
                 }
             }
             catch (Exception ex)
             {
                 log.Error("Error getting NBA game data: " + ex.Message);
+            }
+        }
+        private async Task GetNBAStandings()
+        {
+            try
+            {
+                const int TeamsOnPage = 5;
+                string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(standingsURLString, "basketball", "nba");
+                finalURL += "?level=" + (int)Statics.StandingLevels.Conference;
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    StandingObj? nbaStandings = JsonConvert.DeserializeObject<StandingObj>(content);
+                    SoccerStandingsMod soccerStandings = JsonConvert.DeserializeObject<SoccerStandingsMod>(content);
+                    List<BasketballStandings> graphics = new List<BasketballStandings>();
+                    if (nbaStandings != null)
+                    {
+                        foreach (var league in soccerStandings.children)
+                        {
+                            try
+                            {
+                                foreach (var conference in soccerStandings.children)
+                                {
+                                    int confTotal = 0;
+                                    if (conference != null && conference.standings != null)
+                                    {
+                                        var standingsVM = new ConfStandingsViewModel(conference.name);
+                                        var entries = conference.standings.entries
+                                                        .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "playoffSeed")?.value ?? int.MaxValue)
+                                                        .ToArray();
+                                        List<Models.ConfStandings.Entry> pageEntries = new List<Models.ConfStandings.Entry>();
+                                        for (int i = 0; i < entries.Count(); i++)
+                                        {
+                                            if (i > 0 && i % TeamsOnPage == 0)
+                                            {
+                                                standingsVM.Entries = pageEntries;
+                                                var graphic = new BasketballStandings().GetBasketballStandings(standingsVM, i - (TeamsOnPage - 1));
+                                                graphics.Add(await graphic);
+                                                confTotal += pageEntries.Count;
+                                                pageEntries.Clear();
+                                            }
+                                            pageEntries.Add(entries[i]);
+                                        }
+                                        standingsVM.Entries = pageEntries;
+                                        graphics.Add(await new BasketballStandings().GetBasketballStandings(standingsVM, ++confTotal));
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Error("Game ID: " + " " + ex.Message);
+                            }
+                        }
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NHL standing data: " + ex.Message);
             }
         }
 
@@ -679,7 +753,7 @@ namespace AvaloniaScoreDisplay.Views
             DateTime queryDate = DateTime.Now;
             DateTime gameDate;
             DateTime.TryParse(gameDateStr, out gameDate);
-            if (queryDate.Date == gameDate.Date || (gameState.state == "post") && (gameState.detail == "FT") && gameDate.AddDays(1) == queryDate.Date)
+            if (queryDate.Date == gameDate.Date || (gameState.state == "post") && ((gameState.detail == "FT") || (gameState.detail == "Final")) && gameDate.AddDays(1).Date == queryDate.Date)
             {
                 return true;
             }

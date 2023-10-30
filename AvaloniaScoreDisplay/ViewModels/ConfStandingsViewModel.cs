@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace AvaloniaScoreDisplay.ViewModels
 {
-    public class SoccerStandingsViewModel : ConferenceStandingsViewModel
+    public class ConfStandingsViewModel : ConferenceStandingsViewModel
     {
         public List<Entry>? Entries { get; set; }
 
-        public SoccerStandingsViewModel(string name)
+        public ConfStandingsViewModel(string name)
         {
             Name = name;
             Entries = new List<Entry>();

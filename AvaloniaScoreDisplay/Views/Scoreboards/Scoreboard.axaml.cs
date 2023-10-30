@@ -49,6 +49,9 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 {
                     if (game.competitions[0].odds.FirstOrDefault() != null )
                     {
+                        DateTime startDate = new DateTime();
+                        DateTime.TryParse(game.competitions[0].startDate, out startDate);
+                        GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
                         gameData.Info1 = game.competitions[0].odds.FirstOrDefault()?.details ?? "";
                         gameData.Info2 = "O/U: " + game.competitions[0].odds.FirstOrDefault()?.overUnder.ToString() ?? "";
                     }
@@ -86,6 +89,9 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 {
                     if (game.competitions[0].odds.FirstOrDefault() != null)
                     {
+                        DateTime startDate = new DateTime();
+                        DateTime.TryParse(game.competitions[0].startDate, out startDate);
+                        GameStatus.Text = "Start Time: " + startDate.ToLocalTime().ToString("h:mm tt");
                         gameData.Info1 = game.competitions[0].odds.FirstOrDefault()?.details ?? "";
                         gameData.Info2 = "O/U: " + game.competitions[0].odds.FirstOrDefault()?.overUnder.ToString() ?? "";
                     }
