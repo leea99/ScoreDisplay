@@ -121,8 +121,11 @@ namespace AvaloniaScoreDisplay.Views
                     {
                         try
                         {
-                            var graphic = await new MLB().GetMLBGameScore(game);
-                            graphics.Add(graphic);
+                            if (ShowGame(game.date, game.status.type))
+                            {
+                                var graphic = await new MLB().GetMLBGameScore(game);
+                                graphics.Add(graphic);
+                            }
                         }
                         catch (Exception ex)
                         {
