@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using AvaloniaScoreDisplay.Views.Standings.Hockey;
 using AvaloniaScoreDisplay.Models.BasketballScore;
 using AvaloniaScoreDisplay.Views.Standings.Basketball;
+using SkiaSharp;
 
 namespace AvaloniaScoreDisplay.Views
 {
@@ -72,25 +73,28 @@ namespace AvaloniaScoreDisplay.Views
                         switch (sports[i].ToLower())
                         {
                             case "baseball":
-                                await GetMLBScores();
+                                //await GetMLBScores();
                                 break;
                             case "soccer":
-                                await GetSoccerScores();
+                                //await GetSoccerScores();
                                 break;
                             case "college-football":
-                                await GetCFBScores();
+                                //await GetCFBScores();
                                 break;
                             case "nfl":
-                                await GetNFLScores();
+                                //await GetNFLScores();
                                 //await GetNFLStandings();
                                 break;
                             case "hockey":
-                                await GetNHLScores();
+                                //await GetNHLScores();
                                 //await GetNHLStandings();
                                 break;
                             case "basketball":
-                                await GetNBAScores();
+                                //await GetNBAScores();
                                 //await GetNBAStandings();
+                                break;
+                            case "mens-college-basketball":
+                                await GetNCAAMScores();
                                 break;
                         }
                     }
@@ -399,7 +403,7 @@ namespace AvaloniaScoreDisplay.Views
             }
             catch (Exception ex)
             {
-                log.Error("Error getting MLB game data: " + ex.Message);
+                log.Error("Error getting CFB game data: " + ex.Message);
             }
         }
         private async Task GetNFLScores()
@@ -748,6 +752,71 @@ namespace AvaloniaScoreDisplay.Views
             catch (Exception ex)
             {
                 log.Error("Error getting NHL standing data: " + ex.Message);
+            }
+        }
+
+        private async Task GetNCAAMScores()
+        {
+            try
+            {
+                string? ncaaScoreGroupsValue = ConfigurationManager.AppSettings["NCAAMScoreGroups"];
+                if (!string.IsNullOrEmpty(ncaaScoreGroupsValue))
+                {
+                    List<Scoreboard> graphics = new List<Scoreboard>();
+                    List<string> finalGameIds = new List<string>();
+                    string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                    string[] scoreGroups = ncaaScoreGroupsValue.Split(',');
+                    string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                    var finalURL = ReplaceURL(scoreURLString, "basketball", "mens-college-basketball");
+                    foreach (var group in scoreGroups)
+                    {
+                        var shortGroup = Int16.Parse(group);
+                        if (shortGroup != (Int16)Statics.NCAAGroupID.Top25)
+                        {
+                            finalURL += "?enable=groups&groups=" + group;
+                        }
+                        using (var client = new HttpClient())
+                        {
+                            var response = await client.GetAsync(finalURL);
+                            var content = await response.Content.ReadAsStringAsync();
+                            BasketballScore? basketballScores = JsonConvert.DeserializeObject<BasketballScore>(content);
+                            foreach (var game in basketballScores.events)
+                            {
+                                try
+                                {
+                                    if (!finalGameIds.Contains(game.id) && ShowGame(game.date, game.status.type))
+                                    {
+                                        var graphic = await new Scoreboard().GetBasketballScore(basketballScores.leagues.FirstOrDefault().name, basketballScores.leagues.FirstOrDefault().abbreviation, game);
+                                        graphics.Add(graphic);
+                                        finalGameIds.Add(game.id);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error("Game ID: " + game.id + " " + ex.Message);
+                                }
+                            }
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("mens-college-basketball");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NCAAM game data: " + ex.Message);
             }
         }
 

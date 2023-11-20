@@ -15,6 +15,7 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
 {
     public partial class Scoreboard : UserControl
     {
+        public static bool isCollege = false;
         public Scoreboard()
         {
             InitializeComponent();
@@ -113,7 +114,8 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     Name = team.team.name,
                     Logo = team.team.logo,
                     Score = team.score,
-                    Record = team.records[0].summary
+                    Record = team.records[0].summary,
+                    Rank = team.curatedRank.current
                 };
                 try
                 {
@@ -158,7 +160,14 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             if (gameData.HomeTeam != null)
             {
                 string? homeLogo = null;
-                homeLogo = Models.Statics.GetDarkTeamLogo(leagueAbbr, gameData.HomeTeam.Abbreviation, gameData.HomeTeam.Color);
+                if (leagueAbbr != "NCAAM")
+                {
+                    homeLogo = Models.Statics.GetDarkTeamLogo(leagueAbbr, gameData.HomeTeam.Abbreviation, gameData.HomeTeam.Color);
+                }
+                else
+                {
+                    homeLogo = Models.Statics.GetDarkTeamLogo("ncaa", gameData.HomeTeam.Id, gameData.HomeTeam.Color);
+                }
                 if (homeLogo != null)
                 {
                     using (var httpClient = new HttpClient())
@@ -195,7 +204,14 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
             if (gameData.AwayTeam != null)
             {
                 string? AwayLogo = null;
-                AwayLogo = Models.Statics.GetDarkTeamLogo(leagueAbbr, gameData.AwayTeam.Abbreviation, gameData.AwayTeam.Color);
+                if (leagueAbbr != "NCAAM")
+                {
+                    AwayLogo = Models.Statics.GetDarkTeamLogo(leagueAbbr, gameData.AwayTeam.Abbreviation, gameData.AwayTeam.Color);
+                }
+                else
+                {
+                    AwayLogo = Models.Statics.GetDarkTeamLogo("ncaa", gameData.AwayTeam.Id, gameData.AwayTeam.Color);
+                }
                 if (AwayLogo != null)
                 {
                     using (var httpClient = new HttpClient())

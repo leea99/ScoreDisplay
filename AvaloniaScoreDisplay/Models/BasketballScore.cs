@@ -194,6 +194,7 @@ namespace AvaloniaScoreDisplay.Models.BasketballScore
         public Statistic[] statistics { get; set; }
         public Record[] records { get; set; }
         public Leader[] leaders { get; set; }
+        public CuratedRank curatedRank { get; set; }
     }
 
     public class Team
@@ -363,5 +364,8 @@ namespace AvaloniaScoreDisplay.Models.BasketballScore
         public bool isExternal { get; set; }
         public bool isPremium { get; set; }
     }
-
+    public class CuratedRank
+    {
+        public int current { get; set; }
+    }
 }
