@@ -68,12 +68,13 @@ namespace AvaloniaScoreDisplay.Views
                 sports = sportsStr.Split(',').ToList();
                 while (true)
                 {
-                    for (int i = 0; i < sports.Count; i++)
+                    string[] sportsCopy = sports.ToArray();
+                    for (int i = 0; i < sportsCopy.Length; i++)
                     {
-                        switch (sports[i].ToLower())
+                        switch (sportsCopy[i].ToLower())
                         {
                             case "baseball":
-                                //await GetMLBScores();
+                                await GetMLBScores();
                                 break;
                             case "soccer":
                                 //await GetSoccerScores();
@@ -86,11 +87,11 @@ namespace AvaloniaScoreDisplay.Views
                                 //await GetNFLStandings();
                                 break;
                             case "hockey":
-                                //await GetNHLScores();
+                                await GetNHLScores();
                                 //await GetNHLStandings();
                                 break;
                             case "basketball":
-                                //await GetNBAScores();
+                                await GetNBAScores();
                                 //await GetNBAStandings();
                                 break;
                             case "mens-college-basketball":

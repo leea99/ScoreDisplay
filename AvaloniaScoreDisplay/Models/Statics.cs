@@ -123,6 +123,10 @@ namespace AvaloniaScoreDisplay.Models
 
         private static bool ColorCloserToWhite(string hexColor)
         {
+            if (hexColor == null)
+            {
+                return false;
+            }
             int r = Convert.ToInt32(hexColor.Substring(0, 2), 16);
             int g = Convert.ToInt32(hexColor.Substring(2, 2), 16);
             int b = Convert.ToInt32(hexColor.Substring(4, 2), 16);

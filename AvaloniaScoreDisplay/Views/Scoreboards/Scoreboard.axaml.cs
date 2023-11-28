@@ -114,9 +114,15 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     Name = team.team.name,
                     Logo = team.team.logo,
                     Score = team.score,
-                    Record = team.records[0].summary,
-                    Rank = team.curatedRank.current
                 };
+                try
+                {
+                    teamVM.Record = team.records[0].summary;
+                }
+                catch (RuntimeBinderException)
+                {
+                    //  MyProperty doesn't exist
+                }
                 try
                 {
                     teamVM.Rank = team.curatedRank.current;
@@ -170,22 +176,33 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 }
                 if (homeLogo != null)
                 {
-                    using (var httpClient = new HttpClient())
-                    using (var response = await httpClient.GetAsync(homeLogo))
-                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    try
                     {
-                        var memoryStream = new MemoryStream();
-                        await stream.CopyToAsync(memoryStream);
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        var bitmap = new Bitmap(memoryStream);
-                        HomeTeam.Source = bitmap;
+                        using (var httpClient = new HttpClient())
+                        using (var response = await httpClient.GetAsync(homeLogo))
+                        using (var stream = await response.Content.ReadAsStreamAsync())
+                        {
+                            var memoryStream = new MemoryStream();
+                            await stream.CopyToAsync(memoryStream);
+                            memoryStream.Seek(0, SeekOrigin.Begin);
+                            var bitmap = new Bitmap(memoryStream);
+                            HomeTeam.Source = bitmap;
+                        }
                     }
+                    catch (Exception) { }
                 }
-                Color parsedColor = Color.Parse('#' + gameData.HomeTeam.Color);
-                Color homeColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
-                HomeLogoBack.Background = new SolidColorBrush(homeColor);
-                HomeTeamBack.Background = new SolidColorBrush(homeColor);
-                HomeRecordBack.Background = new SolidColorBrush(homeColor);
+                try
+                {
+                    Color parsedColor = Color.Parse('#' + gameData.HomeTeam.Color);
+                    Color homeColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
+                    HomeLogoBack.Background = new SolidColorBrush(homeColor);
+                    HomeTeamBack.Background = new SolidColorBrush(homeColor);
+                    HomeRecordBack.Background = new SolidColorBrush(homeColor);
+                }
+                catch (Exception)
+                {
+
+                }
                 HomeTeamName.Text = gameData.HomeTeam.Abbreviation;
                 if (gameData.HomeTeam.Rank != null && gameData.HomeTeam.Rank <= 25)
                 {
@@ -214,22 +231,30 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                 }
                 if (AwayLogo != null)
                 {
-                    using (var httpClient = new HttpClient())
-                    using (var response = await httpClient.GetAsync(AwayLogo))
-                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    try
                     {
-                        var memoryStream = new MemoryStream();
-                        await stream.CopyToAsync(memoryStream);
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        var bitmap = new Bitmap(memoryStream);
-                        AwayTeam.Source = bitmap;
+                        using (var httpClient = new HttpClient())
+                        using (var response = await httpClient.GetAsync(AwayLogo))
+                        using (var stream = await response.Content.ReadAsStreamAsync())
+                        {
+                            var memoryStream = new MemoryStream();
+                            await stream.CopyToAsync(memoryStream);
+                            memoryStream.Seek(0, SeekOrigin.Begin);
+                            var bitmap = new Bitmap(memoryStream);
+                            AwayTeam.Source = bitmap;
+                        }
                     }
+                    catch (Exception) { }
                 }
-                Color parsedColor = Color.Parse('#' + gameData.AwayTeam.Color);
-                Color AwayColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
-                AwayLogoBack.Background = new SolidColorBrush(AwayColor);
-                AwayTeamBack.Background = new SolidColorBrush(AwayColor);
-                AwayRecordBack.Background = new SolidColorBrush(AwayColor);
+                try
+                {
+                    Color parsedColor = Color.Parse('#' + gameData.AwayTeam.Color);
+                    Color AwayColor = new Color(192, parsedColor.R, parsedColor.G, parsedColor.B);
+                    AwayLogoBack.Background = new SolidColorBrush(AwayColor);
+                    AwayTeamBack.Background = new SolidColorBrush(AwayColor);
+                    AwayRecordBack.Background = new SolidColorBrush(AwayColor);
+                }
+                catch { }
                 AwayTeamName.Text = gameData.AwayTeam.Abbreviation;
                 if (gameData.AwayTeam.Rank != null && gameData.AwayTeam.Rank <= 25)
                 {
