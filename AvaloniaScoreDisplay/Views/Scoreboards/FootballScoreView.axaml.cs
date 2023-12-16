@@ -76,6 +76,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     HomeTeamBack.Background = new SolidColorBrush(homeColor);
                     HomeRecordBack.Background = new SolidColorBrush(homeColor);
                     HomeTeamName.Text = home.team.abbreviation;
+                    if (home.curatedRank != null && home.curatedRank.current <= 25)
+                    {
+                        HomeTeamName.Text = "#" + home.curatedRank.current + " " + HomeTeamName.Text;
+                    }
                     if (home.records != null && home.records.Length > 0)
                     {
                         HomeTeamRecord.Text = home.records.First().summary;
@@ -117,6 +121,10 @@ namespace AvaloniaScoreDisplay.Views.Scoreboards
                     AwayTeamBack.Background = new SolidColorBrush(awayColor);
                     AwayRecordBack.Background = new SolidColorBrush(awayColor);
                     AwayTeamName.Text = away.team.abbreviation;
+                    if (away.curatedRank != null && away.curatedRank.current <= 25)
+                    {
+                        AwayTeamName.Text = "#" + away.curatedRank.current + " " + AwayTeamName.Text;
+                    }
                     if (away.records != null && away.records.Length > 0)
                     {
                         AwayTeamRecord.Text = away.records.First().summary;

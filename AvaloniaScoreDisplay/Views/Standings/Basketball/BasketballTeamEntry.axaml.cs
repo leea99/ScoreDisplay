@@ -1,21 +1,22 @@
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models.Standings;
+using AvaloniaScoreDisplay.Views.Standings.Hockey;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace AvaloniaScoreDisplay.Views.Standings.NFL
+namespace AvaloniaScoreDisplay.Views.Standings.Basketball
 {
-    public partial class NFLTeamEntry : UserControl
+    public partial class BasketballTeamEntry : UserControl
     {
-        public NFLTeamEntry()
+        public BasketballTeamEntry()
         {
             InitializeComponent();
         }
 
-        public async Task<NFLTeamEntry> SetTeamEntry(Entry team)
+        public async Task<BasketballTeamEntry> SetTeamEntry(Models.ConfStandings.Entry team, int startIndex)
         {
             using (var httpClient = new HttpClient())
             using (var response = await httpClient.GetAsync(team.team.logos.Last().href))
@@ -27,11 +28,10 @@ namespace AvaloniaScoreDisplay.Views.Standings.NFL
                 var bitmap = new Bitmap(memoryStream);
                 TeamLogo.Source = bitmap;
             }
-            //TeamName.Text = team.team.name;
+            Position.Text = startIndex.ToString();
             Wins.Text = team.stats.FirstOrDefault(x => x.abbreviation == "W")?.displayValue ?? "0";
-            Loses.Text = team.stats.FirstOrDefault(x => x.abbreviation == "L")?.displayValue ?? "0";
-            Ties.Text = team.stats.FirstOrDefault(x => x.abbreviation == "T")?.displayValue ?? "0";
-            DivRec.Text = team.stats.FirstOrDefault(x => x.displayName == "DIV")?.displayValue ?? "0";
+            Losses.Text = team.stats.FirstOrDefault(x => x.abbreviation == "L")?.displayValue ?? "0";
+            GB.Text = team.stats.FirstOrDefault(x => x.abbreviation == "GB")?.displayValue ?? "0";
             return this;
         }
     }

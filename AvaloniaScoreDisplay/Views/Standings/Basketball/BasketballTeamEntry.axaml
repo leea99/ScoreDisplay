@@ -2,29 +2,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             x:Class="AvaloniaScoreDisplay.Views.Standings.NFL.NFLTeamEntry">
+             x:Class="AvaloniaScoreDisplay.Views.Standings.Basketball.BasketballTeamEntry">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"></ColumnDefinition>
 			<ColumnDefinition Width="*"></ColumnDefinition>
 			<ColumnDefinition Width="*"></ColumnDefinition>
 			<ColumnDefinition Width="*"></ColumnDefinition>
-			<ColumnDefinition Width="*"></ColumnDefinition>
 		</Grid.ColumnDefinitions>
 		<Border BorderBrush="White" Grid.Row="0" Grid.Column="0" BorderThickness="1" Margin="0,0,0,0">
-			<Image x:Name="TeamLogo" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+					<ColumnDefinition Width="3*"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+				<TextBlock x:Name="Position" Grid.Row="0" Grid.Column="0" FontSize="30" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				<Image x:Name="TeamLogo" Grid.Row="0" Grid.Column="1" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			</Grid>
 		</Border>
 		<Border BorderBrush="White" Grid.Row="0" Grid.Column="1" BorderThickness="1" Margin="0,0,0,0">
 			<TextBlock x:Name="Wins"  FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		</Border>
 		<Border BorderBrush="White" Grid.Row="0" Grid.Column="2" BorderThickness="1" Margin="0,0,0,0">
-			<TextBlock x:Name="Loses" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<TextBlock x:Name="Losses" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		</Border>
 		<Border BorderBrush="White" Grid.Row="0" Grid.Column="3" BorderThickness="1" Margin="0,0,0,0">
-			<TextBlock x:Name="Ties" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-		</Border>
-		<Border BorderBrush="White" Grid.Row="0" Grid.Column="4" BorderThickness="1" Margin="0,0,0,0">
-			<TextBlock x:Name="DivRec" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<TextBlock x:Name="GB" FontSize="40" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		</Border>
 	</Grid>
 </UserControl>

@@ -74,9 +74,16 @@ namespace AvaloniaScoreDisplay.Models
             }
         }
 
-        public static string? GetDarkTeamLogo(string league, string abbreviation, string hexColor)
+        public static string? GetDarkTeamLogo(string league, string abbreviation, string hexColor, string? logo = null)
         {
-            string? logo = ConfigurationManager.AppSettings["TeamLogoURL"];
+            if (logo == null)
+            {
+                logo = ConfigurationManager.AppSettings["TeamLogoURL"];
+            }
+            else if (!logo.Contains("-dark"))
+            {
+                logo = logo.Replace("500", "500-dark");
+            }
             if (logo != null)
             {
                 logo = logo.Replace("LEAGUE", league);
@@ -102,6 +109,7 @@ namespace AvaloniaScoreDisplay.Models
 
         private static bool? CheckLogoMappings(string league, string abbreviation)
         {
+            league = league.ToLower();
             if (logoMappings.ContainsKey(league))
             {
                 var leagueMappings = logoMappings[league];
@@ -115,6 +123,10 @@ namespace AvaloniaScoreDisplay.Models
 
         private static bool ColorCloserToWhite(string hexColor)
         {
+            if (hexColor == null)
+            {
+                return false;
+            }
             int r = Convert.ToInt32(hexColor.Substring(0, 2), 16);
             int g = Convert.ToInt32(hexColor.Substring(2, 2), 16);
             int b = Convert.ToInt32(hexColor.Substring(4, 2), 16);

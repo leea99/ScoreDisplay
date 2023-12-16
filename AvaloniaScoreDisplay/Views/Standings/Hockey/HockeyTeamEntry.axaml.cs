@@ -6,16 +6,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace AvaloniaScoreDisplay.Views.Standings.NFL
+namespace AvaloniaScoreDisplay.Views.Standings.Hockey
 {
-    public partial class NFLTeamEntry : UserControl
+    public partial class HockeyTeamEntry : UserControl
     {
-        public NFLTeamEntry()
+        public HockeyTeamEntry()
         {
             InitializeComponent();
         }
 
-        public async Task<NFLTeamEntry> SetTeamEntry(Entry team)
+        public async Task<HockeyTeamEntry> SetTeamEntry(Entry team, int startIndex)
         {
             using (var httpClient = new HttpClient())
             using (var response = await httpClient.GetAsync(team.team.logos.Last().href))
@@ -27,11 +27,11 @@ namespace AvaloniaScoreDisplay.Views.Standings.NFL
                 var bitmap = new Bitmap(memoryStream);
                 TeamLogo.Source = bitmap;
             }
-            //TeamName.Text = team.team.name;
+            Position.Text = startIndex.ToString();
             Wins.Text = team.stats.FirstOrDefault(x => x.abbreviation == "W")?.displayValue ?? "0";
-            Loses.Text = team.stats.FirstOrDefault(x => x.abbreviation == "L")?.displayValue ?? "0";
-            Ties.Text = team.stats.FirstOrDefault(x => x.abbreviation == "T")?.displayValue ?? "0";
-            DivRec.Text = team.stats.FirstOrDefault(x => x.displayName == "DIV")?.displayValue ?? "0";
+            Losses.Text = team.stats.FirstOrDefault(x => x.abbreviation == "L")?.displayValue ?? "0";
+            OTL.Text = team.stats.FirstOrDefault(x => x.abbreviation == "OTL")?.displayValue ?? "0";
+            Points.Text = team.stats.FirstOrDefault(x => x.displayName == "Points")?.displayValue ?? "0";
             return this;
         }
     }

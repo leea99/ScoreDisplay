@@ -4,7 +4,8 @@ using Avalonia.Media.Imaging;
 using AvaloniaScoreDisplay.Models;
 using AvaloniaScoreDisplay.Models.FootballScores;
 using AvaloniaScoreDisplay.Models.SoccerScores;
-using AvaloniaScoreDisplay.Models.SoccerStandings;
+using AvaloniaScoreDisplay.Models.ConfStandings;
+using AvaloniaScoreDisplay.Models.HockeyScores;
 using AvaloniaScoreDisplay.Models.Standings;
 using AvaloniaScoreDisplay.Scoreboards;
 using AvaloniaScoreDisplay.ViewModels;
@@ -26,6 +27,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using AvaloniaScoreDisplay.Views.Standings.Hockey;
+using AvaloniaScoreDisplay.Models.BasketballScore;
+using AvaloniaScoreDisplay.Views.Standings.Basketball;
+using SkiaSharp;
 
 namespace AvaloniaScoreDisplay.Views
 {
@@ -63,22 +68,34 @@ namespace AvaloniaScoreDisplay.Views
                 sports = sportsStr.Split(',').ToList();
                 while (true)
                 {
-                    for (int i = 0; i < sports.Count; i++)
+                    string[] sportsCopy = sports.ToArray();
+                    for (int i = 0; i < sportsCopy.Length; i++)
                     {
-                        switch (sports[i].ToLower())
+                        switch (sportsCopy[i].ToLower())
                         {
                             case "baseball":
-                                //await GetMLBScores();
+                                await GetMLBScores();
                                 break;
                             case "soccer":
-                                //await GetSoccerScores();
+                                await GetSoccerScores();
                                 break;
                             case "college-football":
                                 await GetCFBScores();
                                 break;
                             case "nfl":
                                 await GetNFLScores();
-                                await GetNFLStandings();
+                                //await GetNFLStandings();
+                                break;
+                            case "hockey":
+                                await GetNHLScores();
+                                //await GetNHLStandings();
+                                break;
+                            case "basketball":
+                                await GetNBAScores();
+                                //await GetNBAStandings();
+                                break;
+                            case "mens-college-basketball":
+                                await GetNCAAMScores();
                                 break;
                         }
                     }
@@ -109,8 +126,11 @@ namespace AvaloniaScoreDisplay.Views
                     {
                         try
                         {
-                            var graphic = await new MLB().GetMLBGameScore(game);
-                            graphics.Add(graphic);
+                            if (ShowGame(game.date, game.status.type))
+                            {
+                                var graphic = await new MLB().GetMLBGameScore(game);
+                                graphics.Add(graphic);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -164,6 +184,11 @@ namespace AvaloniaScoreDisplay.Views
                                 {
                                     if (division != null)
                                     {
+                                        division.standings.entries = division.standings.entries
+                                            .Where(entry => entry.stats.Any(stat => stat.abbreviation == "SEED"))
+                                            .OrderBy(entry => entry.stats.FirstOrDefault(stat => stat.abbreviation == "SEED")?.value)
+                                            .ToArray();
+
                                         var graphic = new MLBStandings().GetMLBStandings(division);
                                         graphics.Add(await graphic);
                                     }
@@ -282,7 +307,7 @@ namespace AvaloniaScoreDisplay.Views
                                         var entries = conference.standings.entries
                                                         .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "rank")?.value ?? int.MaxValue)
                                                         .ToArray();
-                                        List<Models.SoccerStandings.Entry> pageEntries = new List<Models.SoccerStandings.Entry>();
+                                        List<Models.ConfStandings.Entry> pageEntries = new List<Models.ConfStandings.Entry>();
                                         for (int i = 0; i < entries.Count(); i++)
                                         {
                                             if (i > 0 && i % TeamsOnPage == 0)
@@ -347,7 +372,7 @@ namespace AvaloniaScoreDisplay.Views
                             {
                                 try
                                 {
-                                    if (!finalGameIds.Contains(game.id)/* && ShowGame(game.date, game.status.type)*/)
+                                    if (!finalGameIds.Contains(game.id) && ShowGame(game.date, game.status.type))
                                     {
                                         var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
                                         finalGraphics.Add(graphic);
@@ -379,7 +404,7 @@ namespace AvaloniaScoreDisplay.Views
             }
             catch (Exception ex)
             {
-                log.Error("Error getting MLB game data: " + ex.Message);
+                log.Error("Error getting CFB game data: " + ex.Message);
             }
         }
         private async Task GetNFLScores()
@@ -401,13 +426,11 @@ namespace AvaloniaScoreDisplay.Views
                     {
                         try
                         {
-                            /*if (ShowGame(game.date, game.status.type))
+                            if (ShowGame(game.date, game.status.type))
                             {
                                 var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
                                 graphics.Add(graphic);
-                            }*/
-                            var graphic = await new FootballScoreView().GetFootballScore(game, footballScores.leagues.FirstOrDefault());
-                            graphics.Add(graphic);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -487,13 +510,323 @@ namespace AvaloniaScoreDisplay.Views
                 log.Error("Error getting NFL standing data: " + ex.Message);
             }
         }
+        private async Task GetNHLScores()
+        {
+            try
+            {
+                string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(scoreURLString, "hockey", "nhl");
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var settings = new JsonSerializerSettings();
+                    settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
+                    HockeyScores? hockeyScores = JsonConvert.DeserializeObject<HockeyScores>(content, settings);
+                    List<Scoreboard> graphics = new List<Scoreboard>();
+                    foreach (var game in hockeyScores.events)
+                    {
+                        try
+                        {
+                            if (ShowGame(game.date, game.status.type))
+                            {
+                                var graphic = await new Scoreboard().GetHockeyScore(hockeyScores.leagues.FirstOrDefault().name, hockeyScores.leagues.FirstOrDefault().abbreviation, game);
+                                graphics.Add(graphic);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Game ID: " + game.id + " " + ex.Message);
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("hockey");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                    await GetNHLStandings();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NHL game data: " + ex.Message);
+            }
+        }
+        private async Task GetNHLStandings()
+        {
+            try
+            {
+                const int TeamsOnPage = 4;
+                string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(standingsURLString, "hockey", "nhl");
+                finalURL += "?level=" + (int)Statics.StandingLevels.Division;
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    StandingObj? hockeyStandings = JsonConvert.DeserializeObject<StandingObj>(content);
+                    List<HockeyStandings> graphics = new List<HockeyStandings>();
+                    if (hockeyStandings != null)
+                    {
+                        foreach (var league in hockeyStandings.children)
+                        {
+                            foreach (var division in league.children)
+                            {
+                                try
+                                {
+                                    int divTotal = 0;
+                                    if (division != null)
+                                    {
+                                        var standingsVM = new StandingsViewModel(division.name);
+                                        var entries = division.standings.entries
+                                                        .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "rank")?.value ?? int.MaxValue)
+                                                        .ToArray();
+                                        List<Models.Standings.Entry> pageEntries = new List<Models.Standings.Entry>();
+                                        for (int i = 0; i < entries.Count(); i++)
+                                        {
+                                            if (i > 0 && i % TeamsOnPage == 0)
+                                            {
+                                                standingsVM.Entries = pageEntries;
+                                                var graphic = new HockeyStandings().GetHockeyStandings(standingsVM, i - (TeamsOnPage - 1));
+                                                graphics.Add(await graphic);
+                                                divTotal += pageEntries.Count;
+                                                pageEntries.Clear();
+                                            }
+                                            pageEntries.Add(entries[i]);
+                                        }
+                                        standingsVM.Entries = pageEntries;
+                                        graphics.Add(await new HockeyStandings().GetHockeyStandings(standingsVM, ++divTotal));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error("Game ID: " + division.id + " " + ex.Message);
+                                }
+                            }
+                        }
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NHL standing data: " + ex.Message);
+            }
+        }
+        private async Task GetNBAScores()
+        {
+            try
+            {
+                string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(scoreURLString, "basketball", "nba");
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var settings = new JsonSerializerSettings();
+                    settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
+                    BasketballScore? basketballScores = JsonConvert.DeserializeObject<BasketballScore>(content, settings);
+                    List<Scoreboard> graphics = new List<Scoreboard>();
+                    foreach (var game in basketballScores.events)
+                    {
+                        try
+                        {
+                            if (ShowGame(game.date, game.status.type))
+                            {
+                                var graphic = await new Scoreboard().GetBasketballScore(basketballScores.leagues.FirstOrDefault().name, basketballScores.leagues.FirstOrDefault().abbreviation, game);
+                                graphics.Add(graphic);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Game ID: " + game.id + " " + ex.Message);
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("basketball");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                    await GetNBAStandings();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NBA game data: " + ex.Message);
+            }
+        }
+        private async Task GetNBAStandings()
+        {
+            try
+            {
+                const int TeamsOnPage = 5;
+                string? standingsURL = ConfigurationManager.AppSettings["StandingsURL"];
+                string standingsURLString = standingsURL != null ? standingsURL.ToString() : string.Empty;
+                var finalURL = ReplaceURL(standingsURLString, "basketball", "nba");
+                finalURL += "?level=" + (int)Statics.StandingLevels.Conference;
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(finalURL);
+                    var content = await response.Content.ReadAsStringAsync();
+                    StandingObj? nbaStandings = JsonConvert.DeserializeObject<StandingObj>(content);
+                    SoccerStandingsMod soccerStandings = JsonConvert.DeserializeObject<SoccerStandingsMod>(content);
+                    List<BasketballStandings> graphics = new List<BasketballStandings>();
+                    if (nbaStandings != null)
+                    {
+                        foreach (var league in soccerStandings.children)
+                        {
+                            try
+                            {
+                                foreach (var conference in soccerStandings.children)
+                                {
+                                    int confTotal = 0;
+                                    if (conference != null && conference.standings != null)
+                                    {
+                                        var standingsVM = new ConfStandingsViewModel(conference.name);
+                                        var entries = conference.standings.entries
+                                                        .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "playoffSeed")?.value ?? int.MaxValue)
+                                                        .ToArray();
+                                        List<Models.ConfStandings.Entry> pageEntries = new List<Models.ConfStandings.Entry>();
+                                        for (int i = 0; i < entries.Count(); i++)
+                                        {
+                                            if (i > 0 && i % TeamsOnPage == 0)
+                                            {
+                                                standingsVM.Entries = pageEntries;
+                                                var graphic = new BasketballStandings().GetBasketballStandings(standingsVM, i - (TeamsOnPage - 1));
+                                                graphics.Add(await graphic);
+                                                confTotal += pageEntries.Count;
+                                                pageEntries.Clear();
+                                            }
+                                            pageEntries.Add(entries[i]);
+                                        }
+                                        standingsVM.Entries = pageEntries;
+                                        graphics.Add(await new BasketballStandings().GetBasketballStandings(standingsVM, ++confTotal));
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Error("Game ID: " + " " + ex.Message);
+                            }
+                        }
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NHL standing data: " + ex.Message);
+            }
+        }
+
+        private async Task GetNCAAMScores()
+        {
+            try
+            {
+                string? ncaaScoreGroupsValue = ConfigurationManager.AppSettings["NCAAMScoreGroups"];
+                if (!string.IsNullOrEmpty(ncaaScoreGroupsValue))
+                {
+                    List<Scoreboard> graphics = new List<Scoreboard>();
+                    List<string> finalGameIds = new List<string>();
+                    string? scoreURL = ConfigurationManager.AppSettings["ScoreURL"];
+                    string[] scoreGroups = ncaaScoreGroupsValue.Split(',');
+                    string scoreURLString = scoreURL != null ? scoreURL.ToString() : string.Empty;
+                    var finalURL = ReplaceURL(scoreURLString, "basketball", "mens-college-basketball");
+                    foreach (var group in scoreGroups)
+                    {
+                        var shortGroup = Int16.Parse(group);
+                        if (shortGroup != (Int16)Statics.NCAAGroupID.Top25)
+                        {
+                            finalURL += "?enable=groups&groups=" + group;
+                        }
+                        using (var client = new HttpClient())
+                        {
+                            var response = await client.GetAsync(finalURL);
+                            var content = await response.Content.ReadAsStringAsync();
+                            BasketballScore? basketballScores = JsonConvert.DeserializeObject<BasketballScore>(content);
+                            foreach (var game in basketballScores.events)
+                            {
+                                try
+                                {
+                                    if (!finalGameIds.Contains(game.id) && ShowGame(game.date, game.status.type))
+                                    {
+                                        var graphic = await new Scoreboard().GetBasketballScore(basketballScores.leagues.FirstOrDefault().name, basketballScores.leagues.FirstOrDefault().abbreviation, game);
+                                        graphics.Add(graphic);
+                                        finalGameIds.Add(game.id);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error("Game ID: " + game.id + " " + ex.Message);
+                                }
+                            }
+                        }
+                    }
+                    if (graphics.Count == 0)
+                    {
+                        sports.Remove("mens-college-basketball");
+                        return;
+                    }
+                    foreach (var g in graphics)
+                    {
+                        try
+                        {
+                            Content = g;
+                            await Task.Delay(7000);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error getting NCAAM game data: " + ex.Message);
+            }
+        }
 
         private bool ShowGame(string gameDateStr, dynamic gameState)
         {
             DateTime queryDate = DateTime.Now;
             DateTime gameDate;
             DateTime.TryParse(gameDateStr, out gameDate);
-            if (queryDate.Date == gameDate.Date || (gameState.state == "post") && (gameState.detail == "FT") && gameDate.AddDays(1) == queryDate.Date)
+            if (queryDate.Date == gameDate.Date || (gameState.state == "post") && ((gameState.detail == "FT") || (gameState.detail == "Final")) && gameDate.AddDays(1).Date == queryDate.Date)
             {
                 return true;
             }

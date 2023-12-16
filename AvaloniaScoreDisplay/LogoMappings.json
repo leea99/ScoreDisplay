@@ -18,7 +18,11 @@
     "77": true,
     "164": true,
     "2623": true,
-    "331":  true
+    "331": true,
+    "26": true,
+    "239": true,
+    "2199": true,
+    "2739": true
   },
   "nfl": {
     "NYG": true,
@@ -26,9 +30,21 @@
     "DET": true
   },
   "mlb": {
-    "LAD": true,
-    "SD": true,
-    "MIN": true,
+    "KC": true,
+    "STL": true,
+    "OAK": true,
+    "PHI": true
+  },
+  "nhl": {
+    "TOR": true,
+    "CGY": true,
     "TB": true
+  },
+  "nba": {
+    "TOR": true,
+    "OKC": true,
+    "PHI": true,
+    "HOU": true,
+    "BOS":  true
   }
 }

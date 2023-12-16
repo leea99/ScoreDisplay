@@ -2,11 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	      x:Class="AvaloniaScoreDisplay.Views.Scoreboards.FootballScoreView"
+	      x:Class="AvaloniaScoreDisplay.Views.Scoreboards.Scoreboard"
         x:Name="ContentControl"
         >
   <Viewbox Stretch="Uniform">
-    <WrapPanel x:Name="FootballStackPanel" Orientation="Horizontal">
+    <WrapPanel x:Name="ScoreStackPanel" Orientation="Horizontal">
       <Grid Width="600" Height="300">
         <Grid.RowDefinitions>
           <RowDefinition Height="*"/>
