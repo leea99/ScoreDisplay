@@ -48,7 +48,7 @@
             </Border>
             <Border x:Name="HomeRecordBack" BorderBrush="White" BorderThickness="0,0,1,0" Grid.Row="1" Grid.Column="1">
               <Viewbox Stretch="None">
-                <TextBlock x:Name="HomeTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontSize="40"/>
+                <TextBlock x:Name="HomeTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontSize="30"/>
               </Viewbox>
             </Border>
           </Grid>
@@ -73,7 +73,7 @@
             </Border>
             <Border x:Name="AwayRecordBack" BorderBrush="White" BorderThickness="0,0,1,0" Grid.Row="1" Grid.Column="1">
               <Viewbox Stretch="None">
-                <TextBlock x:Name="AwayTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontSize="40"/>
+                <TextBlock x:Name="AwayTeamRecord" FontWeight="Bold" Foreground="White" Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontSize="30"/>
               </Viewbox>
             </Border>
           </Grid>

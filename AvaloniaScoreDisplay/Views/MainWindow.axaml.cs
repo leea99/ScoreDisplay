@@ -84,15 +84,15 @@ namespace AvaloniaScoreDisplay.Views
                                 break;
                             case "nfl":
                                 await GetNFLScores();
-                                //await GetNFLStandings();
+                                await GetNFLStandings();
                                 break;
                             case "hockey":
                                 await GetNHLScores();
-                                //await GetNHLStandings();
+                                await GetNHLStandings();
                                 break;
                             case "basketball":
                                 await GetNBAScores();
-                                //await GetNBAStandings();
+                                await GetNBAStandings();
                                 break;
                             case "mens-college-basketball":
                                 await GetNCAAMScores();
@@ -590,7 +590,7 @@ namespace AvaloniaScoreDisplay.Views
                                     {
                                         var standingsVM = new StandingsViewModel(division.name);
                                         var entries = division.standings.entries
-                                                        .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "rank")?.value ?? int.MaxValue)
+                                                        .OrderByDescending(x => x.stats.FirstOrDefault(x => x.name == "points")?.value ?? int.MaxValue)
                                                         .ToArray();
                                         List<Models.Standings.Entry> pageEntries = new List<Models.Standings.Entry>();
                                         for (int i = 0; i < entries.Count(); i++)
