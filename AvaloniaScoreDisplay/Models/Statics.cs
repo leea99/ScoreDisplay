@@ -3,8 +3,11 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -88,6 +91,7 @@ namespace AvaloniaScoreDisplay.Models
             {
                 logo = logo.Replace("LEAGUE", league);
                 logo = logo.Replace("ABBREVIATION", abbreviation);
+                var match = IsColorProminentInImageOptimized(logo, hexColor);
                 var isForcedDark = CheckLogoMappings(league, abbreviation);
                 if (isForcedDark == null)
                 {
@@ -143,6 +147,69 @@ namespace AvaloniaScoreDisplay.Models
             {
                 return false;
             }
+        }
+
+        public static bool IsColorProminentInImageOptimized(string imageUrl, string hexColor)
+        {
+            try
+            {
+                double threshold = .1;
+                Color targetColor = ColorTranslator.FromHtml(hexColor);
+
+                using (HttpClient client = new HttpClient())
+                {
+                    // Download image
+                    HttpResponseMessage response = client.GetAsync(imageUrl).Result;
+                    response.EnsureSuccessStatusCode();
+
+                    byte[] imageData = response.Content.ReadAsByteArrayAsync().Result;
+
+                    using (MemoryStream ms = new MemoryStream(imageData))
+                    {
+                        using (Bitmap bitmap = new Bitmap(ms))
+                        {
+                            int totalPixels = bitmap.Width * bitmap.Height;
+                            int matchCount = 0;
+
+                            for (int x = 0; x < bitmap.Width; x++)
+                            {
+                                for (int y = 0; y < bitmap.Height; y++)
+                                {
+                                    Color pixelColor = bitmap.GetPixel(x, y);
+
+                                    // Check if the color distance is within the similarity threshold
+                                    if (pixelColor.A != 0 && IsColorSimilar(targetColor, pixelColor))
+                                    {
+                                        matchCount++;
+                                    }
+                                }
+                            }
+
+                            // Calculate the percentage of matching pixels
+                            double matchPercentage = (double)matchCount / totalPixels;
+
+                            // Check if the percentage exceeds the threshold
+                            return matchPercentage >= threshold;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return false;
+        }
+        private static bool IsColorSimilar(Color color1, Color color2)
+        {
+            double similarityThreshold = 33;
+            double distance = Math.Sqrt(
+                Math.Pow(color1.R - color2.R, 2) +
+                Math.Pow(color1.G - color2.G, 2) +
+                Math.Pow(color1.B - color2.B, 2)
+            );
+
+            return distance <= similarityThreshold;
         }
     }
 }
