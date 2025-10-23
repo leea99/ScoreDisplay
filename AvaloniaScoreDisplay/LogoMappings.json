@@ -27,13 +27,15 @@
   "nfl": {
     "NYG": true,
     "CAR": true,
-    "DET": true
+    "DET": true,
+    "NYJ": true
   },
   "mlb": {
     "KC": true,
     "STL": true,
     "OAK": true,
-    "PHI": true
+    "PHI": true,
+    "LAD": true
   },
   "nhl": {
     "TOR": true,

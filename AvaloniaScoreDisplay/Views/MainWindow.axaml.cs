@@ -84,15 +84,15 @@ namespace AvaloniaScoreDisplay.Views
                                 break;
                             case "nfl":
                                 await GetNFLScores();
-                                await GetNFLStandings();
+                                //await GetNFLStandings();
                                 break;
                             case "hockey":
                                 await GetNHLScores();
-                                await GetNHLStandings();
+                                //await GetNHLStandings();
                                 break;
                             case "basketball":
                                 await GetNBAScores();
-                                await GetNBAStandings();
+                                //await GetNBAStandings();
                                 break;
                             case "mens-college-basketball":
                                 await GetNCAAMScores();
@@ -702,40 +702,37 @@ namespace AvaloniaScoreDisplay.Views
                 {
                     var response = await client.GetAsync(finalURL);
                     var content = await response.Content.ReadAsStringAsync();
-                    StandingObj? nbaStandings = JsonConvert.DeserializeObject<StandingObj>(content);
-                    SoccerStandingsMod soccerStandings = JsonConvert.DeserializeObject<SoccerStandingsMod>(content);
+                    //StandingObj? nbaStandings = JsonConvert.DeserializeObject<StandingObj>(content);
+                    SoccerStandingsMod nbaStandings = JsonConvert.DeserializeObject<SoccerStandingsMod>(content);
                     List<BasketballStandings> graphics = new List<BasketballStandings>();
                     if (nbaStandings != null)
                     {
-                        foreach (var league in soccerStandings.children)
+                        foreach (var conference in nbaStandings.children)
                         {
                             try
                             {
-                                foreach (var conference in soccerStandings.children)
+                                int confTotal = 0;
+                                if (conference != null && conference.name != null)
                                 {
-                                    int confTotal = 0;
-                                    if (conference != null && conference.standings != null)
-                                    {
-                                        var standingsVM = new ConfStandingsViewModel(conference.name);
-                                        var entries = conference.standings.entries
-                                                        .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "playoffSeed")?.value ?? int.MaxValue)
-                                                        .ToArray();
+                                    var standingsVM = new ConfStandingsViewModel(conference.name);
+                                    var entries = conference.standings.entries
+                                                    .OrderBy(x => x.stats.FirstOrDefault(x => x.name == "playoffSeed")?.value ?? int.MaxValue)
+                                                    .ToArray();
                                         List<Models.ConfStandings.Entry> pageEntries = new List<Models.ConfStandings.Entry>();
-                                        for (int i = 0; i < entries.Count(); i++)
+                                    for (int i = 0; i < entries.Count(); i++)
+                                    {
+                                        if (i > 0 && i % TeamsOnPage == 0)
                                         {
-                                            if (i > 0 && i % TeamsOnPage == 0)
-                                            {
-                                                standingsVM.Entries = pageEntries;
-                                                var graphic = new BasketballStandings().GetBasketballStandings(standingsVM, i - (TeamsOnPage - 1));
-                                                graphics.Add(await graphic);
-                                                confTotal += pageEntries.Count;
-                                                pageEntries.Clear();
-                                            }
-                                            pageEntries.Add(entries[i]);
+                                            standingsVM.Entries = pageEntries;
+                                            var graphic = new BasketballStandings().GetBasketballStandings(standingsVM, i - (TeamsOnPage - 1));
+                                            graphics.Add(await graphic);
+                                            confTotal += pageEntries.Count;
+                                            pageEntries.Clear();
                                         }
-                                        standingsVM.Entries = pageEntries;
-                                        graphics.Add(await new BasketballStandings().GetBasketballStandings(standingsVM, ++confTotal));
+                                        pageEntries.Add(entries[i]);
                                     }
+                                    standingsVM.Entries = pageEntries;
+                                    graphics.Add(await new BasketballStandings().GetBasketballStandings(standingsVM, ++confTotal));
                                 }
                             }
                             catch (Exception ex)
